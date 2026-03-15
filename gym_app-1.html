@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>La Mia Palestra</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GYM">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0d0d0d">
+<script>
+if ('serviceWorker' in navigator) {
+  const sw = `const C='gym-v1';self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(['./'])))});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)))})`;
+  navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--surface:#181818;--surface2:#212121;--surface3:#2a2a2a;--border:#2e2e2e;--accent:#f0ff44;--text:#f0f0f0;--muted:#666;--green:#4ade80;--red:#f87171;--blue:#7fb8ff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+nav{background:var(--bg);border-bottom:1px solid var(--border);padding:calc(10px + env(safe-area-inset-top)) 16px 10px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.nav-brand{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--accent)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-date{font-size:11px;color:var(--muted)}
+.edit-toggle{background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-size:11px;font-family:'DM Sans',sans-serif;font-weight:600;padding:4px 10px;border-radius:6px;cursor:pointer;transition:all .15s}
+.edit-toggle.active{border-color:var(--accent);color:var(--accent);background:rgba(240,255,68,.08)}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:100}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 0;cursor:pointer;border:none;background:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:10px;gap:3px;transition:color .15s}
+.bnav-btn.active{color:var(--accent)}
+.bnav-icon{font-size:19px}
+main{padding:14px;max-width:500px;margin:0 auto}
+.page{display:none}.page.active{display:block}
+.day-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.day-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 6px;text-align:center;cursor:pointer;transition:all .15s;position:relative}
+.day-card.active{border-color:var(--accent);background:rgba(240,255,68,.07)}
+.day-card-icon{font-size:20px;margin-bottom:3px}
+.day-card-label{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:1px;color:var(--muted)}
+.day-card.active .day-card-label{color:var(--accent)}
+.day-done-dot{width:6px;height:6px;background:var(--green);border-radius:50%;position:absolute;top:6px;right:6px;display:none}
+.day-done-dot.show{display:block}
+.ex-block{background:var(--surface2);border-radius:12px;padding:14px;margin-bottom:10px;border:1px solid transparent;transition:border .15s}
+.ex-block.edit-mode{border-color:var(--border)}
+.ex-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:6px}
+.ex-name-static{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:1px;flex:1}
+.ex-name-input{flex:1;background:var(--surface3);border-radius:6px;padding:6px 8px;border:1px solid var(--border);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:var(--text);outline:none;transition:border-color .15s}
+.ex-name-input:focus{border-color:var(--accent)}
+.ex-badge{font-size:10px;font-family:'DM Sans',sans-serif;font-weight:700;padding:3px 7px;border-radius:99px;background:rgba(240,255,68,.12);color:var(--accent);letter-spacing:.5px;white-space:nowrap}
+.ex-actions{display:flex;gap:5px;flex-shrink:0}
+.ex-btn{background:var(--surface3);border:none;color:var(--muted);font-size:13px;width:28px;height:28px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.ex-btn.del:active{background:rgba(248,113,113,.2);color:var(--red)}
+.series-row{display:flex;flex-wrap:wrap;gap:8px}
+.serie-item{background:var(--surface);border-radius:8px;padding:8px;text-align:center;flex:1;min-width:60px}
+.serie-num{font-size:9px;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px}
+.serie-reps{font-family:'Bebas Neue',sans-serif;font-size:15px;margin-bottom:5px}
+.peso-wrap{position:relative}
+.peso-input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;padding:5px 18px 5px 5px;border-radius:6px;text-align:center;outline:none;transition:border-color .15s;-moz-appearance:textfield}
+.peso-input::-webkit-outer-spin-button,.peso-input::-webkit-inner-spin-button{-webkit-appearance:none}
+.peso-input:focus{border-color:var(--accent)}
+.peso-unit{position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:9px;color:var(--muted);pointer-events:none}
+.pr-flag{font-size:9px;color:gold;margin-top:3px;min-height:13px}
+.serie-editor{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap;padding-top:10px;border-top:1px solid var(--border)}
+.serie-editor label{font-size:11px;color:var(--muted)}
+.serie-editor input[type=number]{width:52px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:5px;border-radius:6px;text-align:center;outline:none;-moz-appearance:textfield}
+.serie-editor input::-webkit-outer-spin-button,.serie-editor input::-webkit-inner-spin-button{-webkit-appearance:none}
+.serie-editor input:focus{border-color:var(--accent)}
+.corsa-block{background:var(--surface2);border-radius:12px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.corsa-label{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px}
+.corsa-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.corsa-km{margin-left:auto;display:flex;align-items:center;gap:5px}
+.corsa-km input{width:62px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-weight:700;font-size:15px;padding:6px 8px;border-radius:8px;text-align:center;outline:none;-moz-appearance:textfield;transition:border-color .15s}
+.corsa-km input::-webkit-outer-spin-button,.corsa-km input::-webkit-inner-spin-button{-webkit-appearance:none}
+.corsa-km input:focus{border-color:var(--accent)}
+.corsa-km span{font-size:12px;color:var(--muted)}
+.add-section{margin-top:4px;margin-bottom:16px}
+.add-title{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.add-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.add-chip{background:var(--surface2);border:1px solid var(--border);color:var(--text);font-size:11px;font-family:'DM Sans',sans-serif;padding:5px 10px;border-radius:99px;cursor:pointer;transition:all .15s}
+.add-chip:active{border-color:var(--accent);color:var(--accent)}
+.add-custom{display:flex;gap:6px}
+.add-custom input{flex:1;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 12px;border-radius:8px;outline:none}
+.add-custom input:focus{border-color:var(--accent)}
+.add-custom button{background:var(--accent);color:#0d0d0d;border:none;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;padding:8px 14px;border-radius:8px;cursor:pointer}
+.save-bar{position:fixed;bottom:calc(60px + env(safe-area-inset-bottom));left:0;right:0;padding:10px 16px;background:linear-gradient(to top,var(--bg) 50%,transparent);pointer-events:none}
+.save-bar button{pointer-events:all;width:100%;max-width:500px;display:block;margin:0 auto;padding:13px;background:var(--accent);color:#0d0d0d;border:none;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;cursor:pointer;transition:transform .1s}
+.save-bar button:active{transform:scale(.97)}
+.storico-entry{background:var(--surface2);border-radius:10px;padding:13px;margin-bottom:8px}
+.storico-date{font-size:11px;color:var(--muted);margin-bottom:4px}
+.storico-day{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--accent);margin-bottom:7px}
+.storico-ex{font-size:12px;margin-bottom:3px;display:flex;justify-content:space-between;gap:8px}
+.storico-pesi{color:var(--muted);font-size:11px;text-align:right}
+.pr-item{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border)}
+.pr-item:last-child{border-bottom:none}
+.pr-ex-name{font-size:13px;font-weight:600}
+.pr-ex-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.pr-val{font-family:'Bebas Neue',sans-serif;font-size:24px;color:gold}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px}
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;margin-bottom:14px}
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-icon{font-size:38px;margin-bottom:10px}
+.empty-text{font-size:13px;line-height:1.6}
+.toast{position:fixed;top:calc(68px + env(safe-area-inset-top));left:50%;transform:translateX(-50%) translateY(-8px);background:var(--accent);color:#0d0d0d;font-family:'Bebas Neue',sans-serif;letter-spacing:1px;font-size:14px;padding:8px 18px;border-radius:8px;opacity:0;transition:all .25s;z-index:200;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-brand">💪 GYM</div>
+  <div class="nav-right">
+    <div class="nav-date" id="nav-date"></div>
+    <button class="edit-toggle" id="edit-toggle" onclick="toggleEdit()">✏️ Modifica</button>
+  </div>
+</nav>
+<div class="toast" id="toast"></div>
+
+<!-- ALLENAMENTO -->
+<div class="page active" id="page-train">
+  <main>
+    <div class="day-grid">
+      <div class="day-card active" onclick="selectDay(0)" id="day-0"><div class="day-done-dot" id="done-0"></div><div class="day-card-icon">🏃</div><div class="day-card-label">Corsa</div></div>
+      <div class="day-card" onclick="selectDay(1)" id="day-1"><div class="day-done-dot" id="done-1"></div><div class="day-card-icon">🏋️</div><div class="day-card-label">G. 1</div></div>
+      <div class="day-card" onclick="selectDay(2)" id="day-2"><div class="day-done-dot" id="done-2"></div><div class="day-card-icon">💪</div><div class="day-card-label">G. 2</div></div>
+      <div class="day-card" onclick="selectDay(3)" id="day-3"><div class="day-done-dot" id="done-3"></div><div class="day-card-icon">🔥</div><div class="day-card-label">G. 3</div></div>
+    </div>
+    <div id="workout-content"></div>
+  </main>
+  <div class="save-bar"><button onclick="saveWorkout()">SALVA ALLENAMENTO</button></div>
+</div>
+
+<!-- STORICO -->
+<div class="page" id="page-storico">
+  <main><div class="page-title">STORICO</div><div id="storico-list"></div></main>
+</div>
+
+<!-- PR -->
+<div class="page" id="page-pr">
+  <main>
+    <div class="page-title">PERSONAL RECORD 🏆</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px">Peso massimo mai sollevato per esercizio</div>
+    <div class="card" id="pr-list"></div>
+  </main>
+</div>
+
+<div class="bottom-nav">
+  <button class="bnav-btn active" onclick="showPage('train')" id="bnav-train"><span class="bnav-icon">🏋️</span><span>Allena</span></button>
+  <button class="bnav-btn" onclick="showPage('storico')" id="bnav-storico"><span class="bnav-icon">📋</span><span>Storico</span></button>
+  <button class="bnav-btn" onclick="showPage('pr')" id="bnav-pr"><span class="bnav-icon">🏆</span><span>PR</span></button>
+</div>
+
+<script>
+const SCHEDA_DEFAULT = [
+  { label:'Corsa Mattiniera', icon:'🏃',
+    esercizi:[{nome:'Corsa Mattiniera', tipo:'corsa', km:true}] },
+  { label:'Giorno 1', icon:'🏋️',
+    esercizi:[
+      {nome:'Panca Piana',      tipo:'gym', serie:4, reps:10},
+      {nome:'Trazioni',         tipo:'gym', serie:4, reps:10},
+      {nome:'Alzate Laterali',  tipo:'gym', serie:4, reps:10},
+      {nome:'Bicipiti S.S.',    tipo:'gym', serie:3, reps:12},
+      {nome:'Leg Extension',    tipo:'gym', serie:3, reps:10},
+      {nome:'Corsa',            tipo:'corsa', km:true}
+    ]},
+  { label:'Giorno 2', icon:'💪',
+    esercizi:[
+      {nome:'Panca Inclinata',  tipo:'gym', serie:4, reps:10},
+      {nome:'Pulley Basso',     tipo:'gym', serie:4, reps:10},
+      {nome:'Military Press',   tipo:'gym', serie:4, reps:10},
+      {nome:'Tricipiti Corda',  tipo:'gym', serie:4, reps:10},
+      {nome:'Leg Curl',         tipo:'gym', serie:3, reps:10},
+      {nome:'Corsa',            tipo:'corsa', km:true}
+    ]},
+  { label:'Giorno 3', icon:'🔥',
+    esercizi:[
+      {nome:'Petto Croci',      tipo:'gym', serie:4, reps:10},
+      {nome:'Cat Machine',      tipo:'gym', serie:4, reps:10},
+      {nome:'Croci Spalle',     tipo:'gym', serie:4, reps:10},
+      {nome:'Bicipiti S.S.',    tipo:'gym', serie:3, reps:12},
+      {nome:'Pressa 45°',       tipo:'gym', serie:4, reps:10},
+      {nome:'Curl Leg',         tipo:'gym', serie:4, reps:10},
+      {nome:'Affondo Bulgari',  tipo:'gym', serie:3, reps:10}
+    ]}
+];
+
+const BACKUP = [
+  'Squat','Stacco da Terra','Hip Thrust','Lat Machine','Rematore Bilanciere',
+  'Dips','Push Up','Face Pull','Curl Manubri','Hammer Curl',
+  'Skull Crusher','French Press','Arnold Press','Upright Row','Shrug',
+  'Calf Raise','Leg Press','Romanian Deadlift','Croci Cavi','Chest Press Machine',
+  'Seated Row','Lat Pulldown','Cable Fly','Reverse Fly','Plank'
+];
+
+let state = JSON.parse(localStorage.getItem('gym_state3') || '{}');
+if (!state.scheda) state.scheda = JSON.parse(JSON.stringify(SCHEDA_DEFAULT));
+if (!state.storico) state.storico = [];
+if (!state.pr) state.pr = {};
+if (!state.done) state.done = {};
+
+let currentDay = 0;
+let editMode = false;
+const oggi = new Date();
+const todayKey = oggi.toDateString();
+document.getElementById('nav-date').textContent = oggi.toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'});
+
+function checkDoneDots() {
+  for (let i=0;i<4;i++) {
+    const d = document.getElementById('done-'+i);
+    if (d) d.classList.toggle('show', !!(state.done[todayKey+'_'+i]));
+  }
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.getElementById('bnav-'+id).classList.add('active');
+  if (id==='storico') renderStorico();
+  if (id==='pr') renderPR();
+  if (id==='train') renderWorkout();
+}
+
+function selectDay(d) {
+  currentDay = d;
+  document.querySelectorAll('.day-card').forEach((c,i)=>c.classList.toggle('active',i===d));
+  renderWorkout();
+}
+
+function toggleEdit() {
+  editMode = !editMode;
+  const btn = document.getElementById('edit-toggle');
+  btn.classList.toggle('active', editMode);
+  btn.textContent = editMode ? '✅ Fine' : '✏️ Modifica';
+  renderWorkout();
+}
+
+function renderWorkout() {
+  const day = state.scheda[currentDay];
+  let html = '';
+  day.esercizi.forEach((ex,ei) => {
+    html += ex.tipo === 'corsa' ? renderCorsa(ex,ei) : renderGym(ex,ei);
+  });
+  if (editMode) html += renderAddSection();
+  document.getElementById('workout-content').innerHTML = html;
+}
+
+function editActionsHtml(ei) {
+  return `<div class="ex-actions">
+    <button class="ex-btn up" onclick="moveEx(${ei},-1)">↑</button>
+    <button class="ex-btn dn" onclick="moveEx(${ei},1)">↓</button>
+    <button class="ex-btn del" onclick="removeEx(${ei})">✕</button>
+  </div>`;
+}
+
+function renderCorsa(ex, ei) {
+  const nameHtml = editMode
+    ? `<input class="ex-name-input" value="${ex.nome}" onchange="renameEx(${ei},this.value)" style="flex:1">`
+    : `<div class="corsa-label">${ex.nome}</div>`;
+  return `<div class="corsa-block" style="${editMode?'border:1px solid var(--border);flex-wrap:wrap;':''}">
+    <span style="font-size:26px">🏃</span>
+    <div style="flex:1">${nameHtml}<div class="corsa-sub">Inserisci km percorsi</div></div>
+    ${ex.km ? `<div class="corsa-km"><input type="number" id="ex-${ei}-km" placeholder="0" step="0.1"><span>km</span></div>` : ''}
+    ${editMode ? editActionsHtml(ei) : ''}
+  </div>`;
+}
+
+function renderGym(ex, ei) {
+  const pr = state.pr[ex.nome] || null;
+  const prLabel = pr ? `<span style="font-size:10px;color:gold;font-weight:400;font-family:'DM Sans';margin-left:6px">PR: ${pr}kg</span>` : '';
+  const nameHtml = editMode
+    ? `<input class="ex-name-input" value="${ex.nome}" onchange="renameEx(${ei},this.value)">`
+    : `<span class="ex-name-static">${ex.nome}</span><span class="ex-badge">${ex.serie}×${ex.reps}</span>${prLabel}`;
+
+  let serieHtml = '';
+  for (let s=0; s<ex.serie; s++) {
+    serieHtml += `<div class="serie-item">
+      <div class="serie-num">S${s+1}</div>
+      <div class="serie-reps">${ex.reps} rep</div>
+      <div class="peso-wrap">
+        <input type="number" class="peso-input" id="ex-${ei}-s${s}" placeholder="—" step="0.5" oninput="checkPR('${ex.nome.replace(/'/g,"\\'")}',${ei})">
+        <span class="peso-unit">kg</span>
+      </div>
+      <div class="pr-flag" id="prf-${ei}-${s}"></div>
+    </div>`;
+  }
+
+  const editorHtml = editMode ? `<div class="serie-editor">
+    <label>Serie</label>
+    <input type="number" value="${ex.serie}" min="1" max="10" onchange="updateSerie(${ei},'serie',this.value)">
+    <label>Reps</label>
+    <input type="number" value="${ex.reps}" min="1" max="50" onchange="updateSerie(${ei},'reps',this.value)">
+  </div>` : '';
+
+  return `<div class="ex-block ${editMode?'edit-mode':''}">
+    <div class="ex-header">${nameHtml}${editMode?editActionsHtml(ei):''}</div>
+    ${!editMode ? `<div class="series-row">${serieHtml}</div>` : ''}
+    ${editorHtml}
+  </div>`;
+}
+
+function renderAddSection() {
+  const existing = state.scheda[currentDay].esercizi.map(e=>e.nome);
+  const available = BACKUP.filter(e=>!existing.includes(e));
+  const chips = available.map(e=>`<span class="add-chip" onclick="addExercise('${e.replace(/'/g,"\\'")}')">+ ${e}</span>`).join('');
+  return `<div class="add-section">
+    <div class="add-title">Aggiungi esercizio</div>
+    <div class="add-grid">${chips}</div>
+    <div class="add-custom">
+      <input type="text" id="custom-inp" placeholder="Nome personalizzato…">
+      <button onclick="addCustom()">+</button>
+    </div>
+  </div>`;
+}
+
+function renameEx(ei, val) {
+  if (val.trim()) state.scheda[currentDay].esercizi[ei].nome = val.trim();
+  save();
+}
+function removeEx(ei) { state.scheda[currentDay].esercizi.splice(ei,1); save(); renderWorkout(); }
+function moveEx(ei, dir) {
+  const arr = state.scheda[currentDay].esercizi;
+  const ni = ei+dir;
+  if (ni<0||ni>=arr.length) return;
+  [arr[ei],arr[ni]]=[arr[ni],arr[ei]];
+  save(); renderWorkout();
+}
+function updateSerie(ei, field, val) { state.scheda[currentDay].esercizi[ei][field]=parseInt(val)||1; save(); }
+function addExercise(nome) { state.scheda[currentDay].esercizi.push({nome,tipo:'gym',serie:4,reps:10}); save(); renderWorkout(); }
+function addCustom() {
+  const inp = document.getElementById('custom-inp');
+  const n = inp.value.trim();
+  if (n) { addExercise(n); inp.value=''; }
+}
+
+function checkPR(nome, ei) {
+  const ex = state.scheda[currentDay].esercizi[ei];
+  for (let s=0;s<ex.serie;s++) {
+    const val = parseFloat(document.getElementById(`ex-${ei}-s${s}`)?.value)||0;
+    const flag = document.getElementById(`prf-${ei}-${s}`);
+    if (flag) flag.textContent = (val && (!state.pr[nome]||val>state.pr[nome])) ? '🏆 PR!' : '';
+  }
+}
+
+function saveWorkout() {
+  const day = state.scheda[currentDay];
+  const entry = {data:oggi.toLocaleDateString('it-IT'),timestamp:Date.now(),giorno:day.label,dayIdx:currentDay,esercizi:[]};
+  day.esercizi.forEach((ex,ei) => {
+    if (ex.tipo==='corsa' && ex.km) {
+      const km = parseFloat(document.getElementById(`ex-${ei}-km`)?.value)||0;
+      if (km) entry.esercizi.push({nome:ex.nome,km});
+    } else if (ex.tipo==='gym') {
+      const pesi=[];
+      for (let s=0;s<ex.serie;s++) pesi.push(parseFloat(document.getElementById(`ex-${ei}-s${s}`)?.value)||0);
+      const mx = Math.max(...pesi);
+      if (mx>0 && (!state.pr[ex.nome]||mx>state.pr[ex.nome])) state.pr[ex.nome]=mx;
+      entry.esercizi.push({nome:ex.nome,serie:ex.serie,reps:ex.reps,pesi});
+    }
+  });
+  state.storico.unshift(entry);
+  state.done[todayKey+'_'+currentDay]=true;
+  save(); checkDoneDots(); showToast('SALVATO 💪'); renderWorkout();
+}
+
+function renderStorico() {
+  const el = document.getElementById('storico-list');
+  if (!state.storico.length) {
+    el.innerHTML=`<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Nessun allenamento ancora.<br>Inizia il tuo primo workout!</div></div>`;
+    return;
+  }
+  el.innerHTML = state.storico.slice(0,60).map(entry=>{
+    const exHtml = entry.esercizi.map(ex=>{
+      if (ex.km) return `<div class="storico-ex"><span>🏃 ${ex.nome}</span><span class="storico-pesi">${ex.km} km</span></div>`;
+      const ps = ex.pesi.filter(p=>p>0).map((p,i)=>`S${i+1}:${p}kg`).join(' · ');
+      return `<div class="storico-ex"><span>${ex.nome} <span style="color:var(--muted);font-size:10px">${ex.serie}×${ex.reps}</span></span><span class="storico-pesi">${ps||'—'}</span></div>`;
+    }).join('');
+    return `<div class="storico-entry"><div class="storico-date">${entry.data}</div><div class="storico-day">${entry.giorno}</div>${exHtml}</div>`;
+  }).join('');
+}
+
+function renderPR() {
+  const el = document.getElementById('pr-list');
+  const keys = Object.keys(state.pr);
+  if (!keys.length) {
+    el.innerHTML=`<div class="empty"><div class="empty-icon">🏆</div><div class="empty-text">Nessun PR ancora.<br>Allenati e supera te stesso!</div></div>`;
+    return;
+  }
+  el.innerHTML = keys.sort((a,b)=>state.pr[b]-state.pr[a]).map(nome=>`
+    <div class="pr-item">
+      <div><div class="pr-ex-name">${nome}</div><div class="pr-ex-sub">Peso massimo</div></div>
+      <div class="pr-val">${state.pr[nome]} kg</div>
+    </div>`).join('');
+}
+
+function save() { localStorage.setItem('gym_state3', JSON.stringify(state)); }
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+checkDoneDots();
+renderWorkout();
+</script>
+</body>
+</html>

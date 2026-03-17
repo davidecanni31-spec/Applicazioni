@@ -1,0 +1,2798 @@
+<!DOCTYPE html>
+<!-- saved from url=(0061)file:///C:/Users/User/Downloads/english_journey_firebase.html -->
+<html lang="it"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Journey</title>
+<link href="./index_files/css2" rel="stylesheet">
+<style>
+/* ===================== THEME VARIABLES ===================== */
+:root {
+  --bg: #f4f0e6;
+  --surface: #fdfaf3;
+  --surface2: #f0ebde;
+  --ink: #1a1714;
+  --ink2: #4a4540;
+  --ink3: #8a8070;
+  --border: rgba(26,23,20,0.1);
+  --border2: rgba(26,23,20,0.06);
+  --gold: #c8860a;
+  --gold-light: #f0b429;
+  --gold-bg: rgba(200,134,10,0.1);
+  --green: #1e6b47;
+  --green-light: #3daa74;
+  --green-bg: rgba(61,170,116,0.12);
+  --red: #b83215;
+  --red-bg: rgba(184,50,21,0.1);
+  --blue: #1a4e8a;
+  --blue-light: #4a8fd6;
+  --blue-bg: rgba(74,143,214,0.1);
+  --shadow-sm: 0 2px 8px rgba(26,23,20,0.06);
+  --shadow: 0 4px 20px rgba(26,23,20,0.08);
+  --shadow-lg: 0 8px 40px rgba(26,23,20,0.12);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+[data-theme="dark"] {
+  --bg: #111009;
+  --surface: #1c1a14;
+  --surface2: #252218;
+  --ink: #f4f0e6;
+  --ink2: #c4bfb0;
+  --ink3: #706a5a;
+  --border: rgba(244,240,230,0.1);
+  --border2: rgba(244,240,230,0.05);
+  --gold: #f0b429;
+  --gold-light: #f7cc6a;
+  --gold-bg: rgba(240,180,41,0.1);
+  --green: #3daa74;
+  --green-light: #5dcc90;
+  --green-bg: rgba(93,204,144,0.1);
+  --red: #e05a3a;
+  --red-bg: rgba(224,90,58,0.1);
+  --blue: #4a8fd6;
+  --blue-light: #7ab4f0;
+  --blue-bg: rgba(122,180,240,0.1);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow: 0 4px 20px rgba(0,0,0,0.35);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.45);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Literata', Georgia, serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* SCREENS */
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: block; }
+
+/* ========== AUTH SCREEN ========== */
+#auth-screen {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  background: var(--bg);
+}
+#auth-screen.active { display: flex; }
+
+.auth-box {
+  width: 100%;
+  max-width: 440px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 40px 36px;
+  box-shadow: var(--shadow-lg);
+}
+
+.auth-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.auth-logo span { color: var(--gold); }
+.auth-tagline { font-size: 0.85rem; color: var(--ink3); margin-bottom: 32px; font-style: italic; }
+
+.auth-tabs {
+  display: flex;
+  gap: 2px;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+  margin-bottom: 24px;
+}
+.auth-tab {
+  flex: 1;
+  padding: 9px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--ink3);
+  transition: all 0.2s;
+}
+.auth-tab.active { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm); }
+
+.auth-form { display: flex; flex-direction: column; gap: 14px; }
+.auth-form.hidden { display: none; }
+
+.field-group { display: flex; flex-direction: column; gap: 5px; }
+.field-label { font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink3); }
+.field-input {
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  font-family: 'Literata', serif;
+  font-size: 0.95rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.field-input:focus { border-color: var(--gold); }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; min-width: 0; }
+.field-row .field-group { min-width: 0; overflow: hidden; }
+.field-row .field-input { width: 100%; min-width: 0; }
+
+.btn-auth {
+  padding: 13px;
+  background: var(--ink);
+  color: var(--gold-light);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Syne', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: all 0.2s;
+  margin-top: 4px;
+}
+.btn-auth:hover { opacity: 0.88; transform: translateY(-1px); }
+
+.auth-msg {
+  font-size: 0.82rem;
+  padding: 10px 14px;
+  border-radius: 8px;
+  display: none;
+  margin-top: 4px;
+}
+.auth-msg.error { background: var(--red-bg); color: var(--red); display: block; }
+.auth-msg.success { background: var(--green-bg); color: var(--green); display: block; }
+
+/* ========== MAIN APP ========== */
+.app-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+}
+
+@media(max-width:768px) {
+  .app-layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .mobile-nav { display: flex !important; }
+}
+
+/* SIDEBAR */
+.sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 28px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  padding: 0 10px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+.sidebar-logo span { color: var(--gold); }
+
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+.user-avatar {
+  width: 34px; height: 34px;
+  background: var(--ink);
+  color: var(--gold-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.user-name { font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 700; line-height: 1.2; }
+.user-level { font-size: 0.7rem; color: var(--gold); font-weight: 600; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--ink2);
+  font-family: 'Syne', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: all 0.15s;
+}
+.nav-item:hover { background: var(--surface2); color: var(--ink); }
+.nav-item.active { background: var(--ink); color: var(--gold-light); }
+.nav-item .nav-icon { font-size: 1rem; flex-shrink: 0; }
+
+.sidebar-spacer { flex: 1; }
+
+.sidebar-bottom { display: flex; flex-direction: column; gap: 4px; padding-top: 12px; border-top: 1px solid var(--border); }
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+}
+.theme-toggle-label { font-family: 'Syne', sans-serif; font-size: 0.78rem; font-weight: 600; color: var(--ink2); }
+.toggle-switch {
+  width: 42px; height: 24px;
+  background: var(--border);
+  border-radius: 99px;
+  position: relative;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s;
+}
+.toggle-switch.on { background: var(--gold); }
+.toggle-thumb {
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 18px; height: 18px;
+  background: var(--surface);
+  border-radius: 50%;
+  transition: transform 0.2s;
+  pointer-events: none;
+}
+.toggle-switch.on .toggle-thumb { transform: translateX(18px); }
+
+/* MOBILE NAV */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  z-index: 100;
+  padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+}
+.mob-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 6px 4px;
+  color: var(--ink3);
+  font-family: 'Syne', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  transition: color 0.2s;
+}
+.mob-nav-item .mn-icon { font-size: 1.2rem; }
+.mob-nav-item.active { color: var(--gold); }
+
+/* MAIN CONTENT */
+.main-content {
+  padding: 32px 28px;
+  max-width: 900px;
+}
+
+@media(max-width:768px) {
+  .main-content { padding: 20px 16px 100px; }
+}
+
+/* PANELS */
+.panel { display: none; }
+.panel.active { display: block; animation: fadeUp 0.25s ease; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+/* XP BAR */
+.xp-bar-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+}
+.xp-level-badge {
+  background: var(--ink);
+  color: var(--gold-light);
+  font-family: 'Syne', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 99px;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+}
+.xp-bar-info { flex: 1; }
+.xp-bar-labels { display: flex; justify-content: space-between; margin-bottom: 5px; }
+.xp-label { font-family: 'Syne', sans-serif; font-size: 0.72rem; color: var(--ink3); font-weight: 600; }
+.xp-track { height: 7px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+.xp-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 99px; transition: width 0.7s cubic-bezier(.34,1.56,.64,1); }
+.xp-total { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; white-space: nowrap; }
+
+/* STAT CARDS */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+@media(max-width:600px) { .stats-row { grid-template-columns: 1fr 1fr; } }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
+.sc-icon { font-size: 1.3rem; margin-bottom: 6px; }
+.sc-num { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; line-height: 1; }
+.sc-label { font-size: 0.72rem; color: var(--ink3); margin-top: 3px; }
+
+/* SECTION HEADER */
+.sec-h {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* CARDS */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 16px;
+}
+
+/* EXERCISE */
+.ex-tag {
+  display: inline-block;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 3px 10px;
+  border-radius: 99px;
+  margin-bottom: 12px;
+}
+.tag-v { background: var(--gold-bg); color: var(--gold); }
+.tag-g { background: var(--blue-bg); color: var(--blue); }
+.tag-r { background: var(--red-bg); color: var(--red); }
+.tag-l { background: var(--green-bg); color: var(--green); }
+
+.ex-q {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+.ex-context {
+  font-size: 0.85rem;
+  color: var(--ink3);
+  font-style: italic;
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  background: var(--surface2);
+  border-radius: 8px;
+  border-left: 3px solid var(--gold);
+}
+
+.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+@media(max-width:480px) { .opts { grid-template-columns: 1fr; } }
+
+.opt-btn {
+  padding: 11px 16px;
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  font-family: 'Literata', serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-align: left;
+  color: var(--ink);
+  transition: all 0.15s;
+  line-height: 1.4;
+}
+.opt-btn:hover:not(:disabled) { border-color: var(--gold); background: var(--gold-bg); }
+.opt-btn.correct { border-color: var(--green-light); background: var(--green-bg); color: var(--green); font-weight: 600; }
+.opt-btn.wrong { border-color: var(--red); background: var(--red-bg); color: var(--red); }
+
+.feedback {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  line-height: 1.6;
+  display: none;
+  margin-top: 8px;
+}
+.feedback.show { display: block; }
+.feedback.ok { background: var(--green-bg); border-left: 3px solid var(--green-light); }
+.feedback.no { background: var(--red-bg); border-left: 3px solid var(--red); }
+
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+.btn {
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  border: none;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: all 0.15s;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-dark { background: var(--ink); color: var(--gold-light); }
+.btn-gold { background: var(--gold); color: white; }
+.btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--ink2); }
+.btn-outline:hover { border-color: var(--ink); color: var(--ink); }
+.btn-sm { padding: 7px 14px; font-size: 0.75rem; }
+
+/* FILL BLANK */
+.fill-sentence {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 2.2;
+}
+.fill-inp {
+  border: none;
+  border-bottom: 2.5px solid var(--gold);
+  background: transparent;
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  width: 110px;
+  outline: none;
+  padding: 2px 6px;
+  transition: border-color 0.2s;
+}
+.fill-inp:focus { border-color: var(--gold-light); }
+.fill-inp.ok { border-color: var(--green-light); color: var(--green); }
+.fill-inp.no { border-color: var(--red); color: var(--red); }
+
+/* VOCAB TABLE */
+.vocab-search {
+  width: 100%;
+  padding: 11px 16px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  font-family: 'Literata', serif;
+  font-size: 0.95rem;
+  color: var(--ink);
+  outline: none;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+.vocab-search:focus { border-color: var(--gold); }
+
+.vocab-cats { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.cat-btn {
+  padding: 5px 14px;
+  border-radius: 99px;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--ink2);
+  transition: all 0.15s;
+}
+.cat-btn.active { background: var(--ink); color: var(--gold-light); border-color: var(--ink); }
+
+.vocab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+@media(max-width:500px) { .vocab-grid { grid-template-columns: 1fr; } }
+
+.vword {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  transition: all 0.15s;
+}
+.vword:hover { border-color: var(--gold); transform: translateY(-1px); }
+.vw-en { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; }
+.vw-it { font-size: 0.78rem; color: var(--ink3); margin-top: 2px; }
+.vw-cat { font-size: 0.6rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+.spk-btn {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--gold-bg);
+  color: var(--gold);
+  border: none;
+  cursor: pointer;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.spk-btn:hover { background: var(--gold); color: white; transform: scale(1.1); }
+
+/* GRAMMAR LESSON */
+.lesson-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+}
+.lesson-header {
+  padding: 14px 20px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.lesson-title { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; }
+.lesson-body { padding: 20px; display: none; }
+.lesson-body.open { display: block; }
+.rule-box {
+  background: var(--gold-bg);
+  border: 1px solid rgba(200,134,10,0.2);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+.rule-box strong { font-family: 'Syne', sans-serif; }
+.example-list { display: flex; flex-direction: column; gap: 6px; margin: 12px 0; }
+.ex-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+.ex-en { font-style: italic; color: var(--blue); }
+.ex-it { color: var(--ink3); }
+
+/* DIALOGUE */
+.dial-scene {
+  font-size: 0.7rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+.bubble-wrap { margin-bottom: 12px; }
+.bubble-lbl { font-size: 0.63rem; font-family: 'Syne', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink3); margin-bottom: 4px; }
+.bubble {
+  display: inline-block;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  max-width: 75%;
+}
+.bubble-a { background: var(--ink); color: var(--gold-light); border-bottom-left-radius: 4px; }
+.bubble-b { background: var(--surface2); color: var(--ink); border-bottom-right-radius: 4px; float: right; }
+.clearfix::after { content:''; display:table; clear:both; }
+
+/* PROGRESS */
+.prog-skill { margin-bottom: 16px; }
+.prog-skill-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+.prog-skill-name { font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 700; }
+.prog-skill-pct { font-size: 0.75rem; color: var(--ink3); }
+.prog-track { height: 8px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 99px; transition: width 0.8s cubic-bezier(.34,1.56,.64,1); }
+
+.week-chart { display: flex; align-items: flex-end; gap: 6px; height: 70px; margin-bottom: 8px; }
+.wc-bar { flex: 1; border-radius: 4px 4px 0 0; transition: height 0.4s; min-height: 3px; background: var(--gold); opacity: 0.4; }
+.wc-bar.today { opacity: 1; }
+
+.goal-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border2); }
+.goal-icon { font-size: 1.2rem; }
+.goal-info { flex: 1; }
+.goal-title { font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 700; }
+.goal-sub { font-size: 0.72rem; color: var(--ink3); margin-top: 2px; }
+.goal-pct { font-family: 'Syne', sans-serif; font-size: 0.78rem; font-weight: 800; color: var(--gold); }
+
+/* NOTIF */
+.notif {
+  position: fixed;
+  top: 20px; right: 20px;
+  background: var(--ink);
+  color: var(--gold-light);
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: var(--shadow-lg);
+  transform: translateX(120%);
+  transition: transform 0.4s cubic-bezier(.34,1.56,.64,1);
+  z-index: 9999;
+  max-width: 260px;
+}
+.notif.show { transform: translateX(0); }
+
+/* SAVE BTN */
+.save-btn {
+  position: fixed;
+  bottom: 80px; right: 20px;
+  background: var(--green);
+  color: white;
+  border: none;
+  border-radius: 99px;
+  padding: 12px 22px;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  z-index: 200;
+  display: flex; align-items: center; gap: 6px;
+  transition: all 0.2s;
+}
+.save-btn:hover { background: var(--green-light); transform: translateY(-2px); }
+
+@media(min-width:769px) { .save-btn { bottom: 20px; } }
+
+/* PROFILE */
+.profile-section { margin-bottom: 28px; }
+.profile-avatar-big {
+  width: 72px; height: 72px;
+  background: var(--ink);
+  color: var(--gold-light);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 1.6rem; font-weight: 800;
+  margin-bottom: 12px;
+}
+.profile-name-big { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; }
+.profile-level-big { color: var(--gold); font-size: 0.85rem; font-weight: 600; margin-top: 4px; }
+
+/* WORD OF DAY */
+.wod {
+  background: linear-gradient(135deg, var(--ink) 0%, #2a2418 100%);
+  color: var(--gold-light);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.wod::after {
+  content: '"';
+  position: absolute; right: 16px; top: -24px;
+  font-family: 'Literata', serif;
+  font-size: 9rem; opacity: 0.08;
+  color: var(--gold-light); line-height: 1;
+}
+.wod-label { font-family: 'Syne', sans-serif; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.5; margin-bottom: 10px; }
+.wod-word { font-family: 'Syne', sans-serif; font-size: 2.4rem; font-weight: 800; line-height: 1; }
+.wod-ph { font-size: 0.88rem; opacity: 0.5; margin: 6px 0; }
+.wod-def { font-size: 0.9rem; opacity: 0.8; line-height: 1.5; margin-top: 10px; }
+.wod-ex { font-size: 0.8rem; opacity: 0.5; margin-top: 6px; font-style: italic; }
+
+/* PAGINATION */
+.pagination { display: flex; align-items: center; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+.page-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--ink2);
+  font-family: 'Syne', sans-serif;
+  font-size: 0.75rem; font-weight: 700;
+  cursor: pointer; transition: all 0.15s;
+}
+.page-btn.active { background: var(--ink); color: var(--gold-light); border-color: var(--ink); }
+.page-btn:hover:not(.active) { border-color: var(--gold); }
+.page-info { font-size: 0.75rem; color: var(--ink3); }
+
+/* LOADING */
+.loading-spinner { text-align: center; padding: 40px; color: var(--ink3); font-style: italic; }
+
+/* ========== PRETEST SCREEN ========== */
+#pretest-screen { display:none; align-items:center; justify-content:center; min-height:100vh; padding:24px; background:var(--bg); }
+#pretest-screen.active { display:flex; }
+.pretest-box { width:100%; max-width:520px; background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:36px 32px; box-shadow:var(--shadow-lg); }
+.pretest-intro { text-align:center; }
+.pretest-intro .pt-emoji { font-size:3rem; margin-bottom:12px; }
+.pretest-intro h2 { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; margin-bottom:8px; }
+.pretest-intro p { color:var(--ink3); font-size:0.9rem; line-height:1.6; margin-bottom:24px; }
+.pt-progress-row { display:flex; align-items:center; gap:12px; margin-bottom:24px; }
+.pt-step-label { font-family:'Syne',sans-serif; font-size:0.72rem; font-weight:800; color:var(--gold); white-space:nowrap; }
+.pt-track { flex:1; height:6px; background:var(--surface2); border-radius:99px; overflow:hidden; }
+.pt-fill { height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-light)); border-radius:99px; transition:width 0.5s ease; }
+.pt-q { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:700; margin-bottom:8px; line-height:1.4; }
+.pt-ctx { font-size:0.82rem; color:var(--ink3); font-style:italic; margin-bottom:14px; padding:8px 12px; background:var(--surface2); border-radius:8px; }
+.pt-opts { display:flex; flex-direction:column; gap:8px; margin-bottom:12px; }
+.pt-opt { padding:12px 16px; border:1.5px solid var(--border); background:var(--bg); border-radius:var(--radius-sm); font-family:'Literata',serif; font-size:0.92rem; cursor:pointer; text-align:left; color:var(--ink); transition:all 0.15s; }
+.pt-opt:hover:not(:disabled) { border-color:var(--gold); background:var(--gold-bg); }
+.pt-opt.correct { border-color:var(--green-light); background:var(--green-bg); color:var(--green); font-weight:600; }
+.pt-opt.wrong { border-color:var(--red); background:var(--red-bg); color:var(--red); }
+.pt-fb { padding:10px 14px; border-radius:8px; font-size:0.82rem; margin-top:8px; display:none; line-height:1.5; }
+.pt-fb.show { display:block; }
+.pt-fb.ok { background:var(--green-bg); border-left:3px solid var(--green-light); }
+.pt-fb.no { background:var(--red-bg); border-left:3px solid var(--red); }
+.pt-result { text-align:center; padding:8px 0; }
+.pt-score-big { font-family:'Syne',sans-serif; font-size:3.5rem; font-weight:800; line-height:1; color:var(--gold); }
+.pt-level-assigned { font-family:'Syne',sans-serif; font-size:1.2rem; font-weight:800; margin:12px 0 6px; }
+.pt-desc { font-size:0.88rem; color:var(--ink3); line-height:1.6; margin-bottom:20px; }
+
+/* ========== FINAL EXAM MODAL ========== */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:500; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px); }
+.modal-overlay.open { display:flex; }
+.modal-box { background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:32px 28px; max-width:540px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:var(--shadow-lg); animation:modalIn 0.3s cubic-bezier(.34,1.56,.64,1); }
+@keyframes modalIn { from{opacity:0;transform:scale(0.92)} to{opacity:1;transform:scale(1)} }
+.modal-title { font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:800; margin-bottom:4px; }
+.modal-sub { font-size:0.82rem; color:var(--ink3); margin-bottom:20px; }
+.exam-q { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; margin-bottom:12px; line-height:1.4; }
+.exam-opts { display:flex; flex-direction:column; gap:7px; margin-bottom:10px; }
+.exam-opt { padding:10px 14px; border:1.5px solid var(--border); background:var(--bg); border-radius:8px; font-family:'Literata',serif; font-size:0.88rem; cursor:pointer; text-align:left; color:var(--ink); transition:all 0.15s; }
+.exam-opt:hover:not(:disabled) { border-color:var(--gold); background:var(--gold-bg); }
+.exam-opt.correct { border-color:var(--green-light); background:var(--green-bg); color:var(--green); }
+.exam-opt.wrong { border-color:var(--red); background:var(--red-bg); color:var(--red); }
+
+/* XP PENALTY */
+@keyframes penaltyFlash { 0%{background:rgba(184,50,21,0.18)} 100%{background:transparent} }
+.penalty-flash { animation:penaltyFlash 0.7s ease; }
+
+/* LEVEL UP BANNER */
+.levelup-banner { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:999; align-items:center; justify-content:center; flex-direction:column; gap:16px; backdrop-filter:blur(6px); }
+.levelup-banner.show { display:flex; animation:fadeIn 0.4s ease; }
+.levelup-content { text-align:center; color:white; }
+.levelup-emoji { font-size:4rem; margin-bottom:8px; }
+.levelup-text { font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; color:var(--gold-light); }
+.levelup-sub { font-size:1rem; opacity:0.7; margin-top:6px; }
+.levelup-cta { font-family:'Syne',sans-serif; font-size:0.85rem; font-weight:700; color:var(--gold-light); background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:10px 24px; border-radius:99px; cursor:pointer; margin-top:12px; transition:all 0.2s; }
+.levelup-cta:hover { background:rgba(255,255,255,0.2); }
+
+/* EXAM READY BANNER */
+.exam-ready-card { background:linear-gradient(135deg,#1a1714 0%,#2d2618 100%); color:var(--gold-light); border-radius:var(--radius); padding:20px 22px; margin-bottom:20px; display:none; align-items:center; gap:14px; cursor:pointer; transition:transform 0.2s; }
+.exam-ready-card:hover { transform:translateY(-2px); }
+.exam-ready-card.visible { display:flex; animation:fadeUp 0.4s ease; }
+.exam-ready-icon { font-size:2rem; flex-shrink:0; }
+.exam-ready-text .ert-title { font-family:'Syne',sans-serif; font-size:1rem; font-weight:800; }
+.exam-ready-text .ert-sub { font-size:0.78rem; opacity:0.6; margin-top:3px; }
+</style>
+</head>
+<body>
+
+<!-- NOTIF -->
+<div class="notif" id="notif"></div>
+
+<!-- LEVELUP BANNER -->
+<div class="levelup-banner" id="levelup-banner">
+  <div class="levelup-content">
+    <div class="levelup-emoji">🏆</div>
+    <div class="levelup-text" id="lu-text">Livello B1 sbloccato!</div>
+    <div class="levelup-sub" id="lu-sub">Complimenti, hai superato l'esame!</div>
+  </div>
+  <button class="levelup-cta" onclick="closeLevelUp()">Continua →</button>
+</div>
+
+<!-- FINAL EXAM MODAL -->
+<div class="modal-overlay" id="exam-modal">
+  <div class="modal-box">
+    <div id="exam-inner"></div>
+  </div>
+</div>
+
+<!-- PRETEST SCREEN -->
+<div id="pretest-screen" class="screen">
+  <div class="pretest-box" id="pretest-box">
+    <!-- filled by JS -->
+  </div>
+</div>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen" class="screen active">
+  <div class="auth-box">
+    <div class="auth-logo">English <span>Journey</span></div>
+    <div class="auth-tagline">Il tuo percorso personale verso la fluidità</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab(&#39;login&#39;)">Accedi</button>
+      <button class="auth-tab" onclick="switchAuthTab(&#39;register&#39;)">Registrati</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="auth-form" id="login-form">
+      <div class="field-group">
+        <div class="field-label">Nome Utente</div>
+        <input class="field-input" id="login-user" placeholder="es. mario.rossi" autocomplete="username">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Password</div>
+        <input class="field-input" id="login-pass" type="password" placeholder="La tua password" autocomplete="current-password">
+      </div>
+      <button class="btn-auth" onclick="doLogin()">Entra →</button>
+      <div class="auth-msg" id="login-msg"></div>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="auth-form hidden" id="register-form">
+      <div class="field-row">
+        <div class="field-group">
+          <div class="field-label">Nome</div>
+          <input class="field-input" id="reg-first" placeholder="Mario">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Cognome</div>
+          <input class="field-input" id="reg-last" placeholder="Rossi">
+        </div>
+      </div>
+      <div class="field-group">
+        <div class="field-label">Nome Utente</div>
+        <input class="field-input" id="reg-user" placeholder="mario.rossi (per il login)">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Password</div>
+        <input class="field-input" id="reg-pass" type="password" placeholder="Scegli una password">
+      </div>
+      <div class="field-group">
+        <div class="field-label">Conferma Password</div>
+        <input class="field-input" id="reg-pass2" type="password" placeholder="Ripeti la password">
+      </div>
+      <button class="btn-auth" onclick="doRegister()">Crea Profilo →</button>
+      <div class="auth-msg" id="register-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app-screen" class="screen">
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">EJ <span>·</span></div>
+    <div class="user-pill" onclick="showPanel(&#39;profile&#39;)">
+      <div class="user-avatar" id="sb-avatar">?</div>
+      <div>
+        <div class="user-name" id="sb-name">–</div>
+        <div class="user-level" id="sb-level">A2+</div>
+      </div>
+    </div>
+    <button class="nav-item active" data-panel="home" onclick="showPanel(&#39;home&#39;,this)"><span class="nav-icon">🏠</span> Dashboard</button>
+    <button class="nav-item" data-panel="vocab" onclick="showPanel(&#39;vocab&#39;,this)"><span class="nav-icon">📖</span> Vocabolario</button>
+    <button class="nav-item" data-panel="grammar" onclick="showPanel(&#39;grammar&#39;,this)"><span class="nav-icon">✏️</span> Grammatica</button>
+    <button class="nav-item" data-panel="exercises" onclick="showPanel(&#39;exercises&#39;,this)"><span class="nav-icon">🧩</span> Esercizi</button>
+    <button class="nav-item" data-panel="dialogue" onclick="showPanel(&#39;dialogue&#39;,this)"><span class="nav-icon">💬</span> Dialoghi</button>
+    <button class="nav-item" data-panel="progress" onclick="showPanel(&#39;progress&#39;,this)"><span class="nav-icon">📈</span> Progressi</button>
+    <div class="sidebar-spacer"></div>
+    <div class="sidebar-bottom">
+      <div class="theme-toggle">
+        <span class="theme-toggle-label">🌙 Tema scuro</span>
+        <button class="toggle-switch" id="theme-sw" onclick="toggleTheme()"><div class="toggle-thumb"></div></button>
+      </div>
+      <button class="nav-item" onclick="doLogout()"><span class="nav-icon">↩</span> Esci</button>
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="main-content">
+
+    <!-- XP BAR -->
+    <div class="xp-bar-wrap">
+      <div class="xp-level-badge" id="level-badge">A2+</div>
+      <div class="xp-bar-info">
+        <div class="xp-bar-labels">
+          <span class="xp-label" id="xp-label-l">Livello corrente</span>
+          <span class="xp-label" id="xp-label-r">0 / 500 XP</span>
+        </div>
+        <div class="xp-track"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+      </div>
+      <div class="xp-total"><span id="xp-total">0</span> XP</div>
+    </div>
+
+    <!-- PANELS -->
+
+    <!-- HOME -->
+    <div class="panel active" id="panel-home">
+      <div class="exam-ready-card" id="exam-ready-card" onclick="openFinalExam()">
+        <div class="exam-ready-icon">🎓</div>
+        <div class="exam-ready-text">
+          <div class="ert-title">Esame finale disponibile!</div>
+          <div class="ert-sub">Hai raggiunto il massimo XP del livello. Supera l'esame per avanzare!</div>
+        </div>
+        <span style="margin-left:auto;font-family:&#39;Syne&#39;,sans-serif;font-weight:800;font-size:1.2rem;">→</span>
+      </div>
+      <div class="wod" id="wod-block">
+        <div class="wod-label">☀️ Word of the Day</div>
+        <div class="wod-word" id="wod-w">–</div>
+        <div class="wod-ph" id="wod-ph"></div>
+        <div class="wod-def" id="wod-df"></div>
+        <div class="wod-ex" id="wod-ex"></div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="sc-icon">🔥</div><div class="sc-num" id="s-streak">0</div><div class="sc-label">Streak giorni</div></div>
+        <div class="stat-card"><div class="sc-icon">📚</div><div class="sc-num" id="s-words">0</div><div class="sc-label">Parole studiate</div></div>
+        <div class="stat-card"><div class="sc-icon">✅</div><div class="sc-num" id="s-exs">0</div><div class="sc-label">Esercizi fatti</div></div>
+        <div class="stat-card"><div class="sc-icon">🎯</div><div class="sc-num" id="s-acc">0%</div><div class="sc-label">Accuratezza</div></div>
+      </div>
+      <!-- Penalty info -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px;">
+        <span style="font-size:1.4rem;flex-shrink:0;">⚖️</span>
+        <div>
+          <div style="font-family:&#39;Syne&#39;,sans-serif;font-size:0.78rem;font-weight:800;margin-bottom:4px;">Sistema penalità ponderato</div>
+          <div style="font-size:0.76rem;color:var(--ink3);line-height:1.6;">
+            <b>Vocab</b> sbagliato: −3/−4/−6 XP · <b>Grammatica</b>: −5/−7/−10 XP · <b>Reading</b>: −4/−6/−9 XP (in base al livello A2→B1)<br>
+            3+ errori di fila: moltiplicatore ×1.3 → ×2.0 · <b>Esame finale</b>: penalità massima
+          </div>
+        </div>
+      </div>
+      <div class="sec-h">⚡ Esercizio Rapido</div>
+      <div class="card" id="quick-card">
+        <div class="loading-spinner">Caricamento esercizio...</div>
+      </div>
+    </div>
+
+    <!-- VOCAB -->
+    <div class="panel" id="panel-vocab">
+      <div class="sec-h">📖 Vocabolario — 1000+ parole A2/B1</div>
+      <input class="vocab-search" id="vsearch" placeholder="🔍 Cerca parola in inglese o italiano..." oninput="filterVocab()">
+      <div class="vocab-cats" id="vcats"></div>
+      <div id="vocab-grid-wrap"></div>
+      <div class="pagination" id="vocab-pag"></div>
+    </div>
+
+    <!-- GRAMMAR -->
+    <div class="panel" id="panel-grammar">
+      <div class="sec-h">✏️ Lezioni di Grammatica</div>
+      <p style="color:var(--ink3);font-size:0.85rem;margin-bottom:16px;font-style:italic;">Studia la regola, poi fai gli esercizi nella sezione Esercizi.</p>
+      <div id="grammar-lessons"></div>
+    </div>
+
+    <!-- EXERCISES -->
+    <div class="panel" id="panel-exercises">
+      <div class="sec-h">🧩 Esercizi Strutturati</div>
+      <div style="margin-bottom:16px;">
+        <div class="vocab-cats" id="ex-cats">
+          <button class="cat-btn active" data-excat="all" onclick="filterExCat(&#39;all&#39;,this)">Tutti</button>
+          <button class="cat-btn" data-excat="vocab" onclick="filterExCat(&#39;vocab&#39;,this)">Vocabolario</button>
+          <button class="cat-btn" data-excat="grammar" onclick="filterExCat(&#39;grammar&#39;,this)">Grammatica</button>
+          <button class="cat-btn" data-excat="reading" onclick="filterExCat(&#39;reading&#39;,this)">Reading</button>
+          <button class="cat-btn" data-excat="fill" onclick="filterExCat(&#39;fill&#39;,this)">Fill in Blank</button>
+        </div>
+      </div>
+      <div id="ex-container"></div>
+    </div>
+
+    <!-- DIALOGUE -->
+    <div class="panel" id="panel-dialogue">
+      <div class="sec-h">💬 Dialoghi Reali</div>
+      <div id="dial-container"></div>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="panel" id="panel-progress">
+      <div class="sec-h">📈 I Tuoi Progressi</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+        <div class="card">
+          <div style="font-family:&#39;Syne&#39;,sans-serif;font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink3);margin-bottom:12px;">📅 XP Settimanali</div>
+          <div class="week-chart" id="wchart"></div>
+          <div style="display:flex;justify-content:space-around;margin-top:4px;">
+            <span style="font-size:0.58rem;color:var(--ink3)">L</span><span style="font-size:0.58rem;color:var(--ink3)">M</span><span style="font-size:0.58rem;color:var(--ink3)">M</span><span style="font-size:0.58rem;color:var(--ink3)">G</span><span style="font-size:0.58rem;color:var(--ink3)">V</span><span style="font-size:0.58rem;color:var(--ink3)">S</span><span style="font-size:0.58rem;color:var(--ink3)">D</span>
+          </div>
+        </div>
+        <div class="card">
+          <div style="font-family:&#39;Syne&#39;,sans-serif;font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink3);margin-bottom:12px;">🏆 Obiettivi</div>
+          <div id="goals-wrap"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-family:&#39;Syne&#39;,sans-serif;font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink3);margin-bottom:16px;">📊 Competenze</div>
+        <div id="skills-wrap"></div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="panel" id="panel-profile">
+      <div class="sec-h">👤 Profilo</div>
+      <div class="card">
+        <div class="profile-section">
+          <div class="profile-avatar-big" id="prof-avatar">?</div>
+          <div class="profile-name-big" id="prof-name">–</div>
+          <div class="profile-level-big" id="prof-level">Livello A2+</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:20px 0;">
+          <div style="text-align:center;padding:14px;background:var(--surface2);border-radius:var(--radius-sm);">
+            <div style="font-family:&#39;Syne&#39;,sans-serif;font-size:1.4rem;font-weight:800;" id="prof-xp">0</div>
+            <div style="font-size:0.72rem;color:var(--ink3)">XP Totali</div>
+          </div>
+          <div style="text-align:center;padding:14px;background:var(--surface2);border-radius:var(--radius-sm);">
+            <div style="font-family:&#39;Syne&#39;,sans-serif;font-size:1.4rem;font-weight:800;" id="prof-streak">0</div>
+            <div style="font-size:0.72rem;color:var(--ink3)">Streak</div>
+          </div>
+          <div style="text-align:center;padding:14px;background:var(--surface2);border-radius:var(--radius-sm);">
+            <div style="font-family:&#39;Syne&#39;,sans-serif;font-size:1.4rem;font-weight:800;" id="prof-acc2">0%</div>
+            <div style="font-size:0.72rem;color:var(--ink3)">Accuratezza</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;">
+            <div class="field-label" style="margin-bottom:6px;">Tema</div>
+            <div class="theme-toggle" style="justify-content:flex-start;gap:12px;">
+              <button class="toggle-switch" id="theme-sw2" onclick="toggleTheme()"><div class="toggle-thumb"></div></button>
+              <span class="theme-toggle-label" id="theme-label">Chiaro</span>
+            </div>
+          </div>
+          <button class="btn btn-dark" onclick="doLogout()">↩ Esci dall'account</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<!-- SAVE BUTTON -->
+<button class="save-btn" id="save-btn" onclick="manualSave()" style="display:none">
+  💾 Salva progressi
+</button>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav" id="mob-nav" style="display:none">
+  <button class="mob-nav-item active" data-panel="home" onclick="showPanel(&#39;home&#39;,this)"><span class="mn-icon">🏠</span>Home</button>
+  <button class="mob-nav-item" data-panel="vocab" onclick="showPanel(&#39;vocab&#39;,this)"><span class="mn-icon">📖</span>Vocab</button>
+  <button class="mob-nav-item" data-panel="exercises" onclick="showPanel(&#39;exercises&#39;,this)"><span class="mn-icon">🧩</span>Esercizi</button>
+  <button class="mob-nav-item" data-panel="dialogue" onclick="showPanel(&#39;dialogue&#39;,this)"><span class="mn-icon">💬</span>Dialogo</button>
+  <button class="mob-nav-item" data-panel="progress" onclick="showPanel(&#39;progress&#39;,this)"><span class="mn-icon">📈</span>Progressi</button>
+</nav>
+
+<script type="module">
+// ============================================================
+// FIREBASE REALTIME DATABASE — gratuito senza carta di credito
+// ============================================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCX-C9clujSiaxXmn8hi6rMBDSv667Cth0",
+  authDomain: "englishe-journey.firebaseapp.com",
+  projectId: "englishe-journey",
+  storageBucket: "englishe-journey.firebasestorage.app",
+  messagingSenderId: "831329159217",
+  appId: "1:831329159217:web:f866f7f516cd1fea7aed10",
+  databaseURL: "https://englishe-journey-default-rtdb.europe-west1.firebasedatabase.app"
+};
+
+const _fbApp = initializeApp(firebaseConfig);
+const _db    = getDatabase(_fbApp);
+
+// ---------- helpers ----------
+async function loadUsers() {
+  try {
+    const snap = await get(ref(_db, 'ej_users'));
+    return snap.exists() ? snap.val() : {};
+  } catch(e) {
+    try { return JSON.parse(localStorage.getItem('ej_users_v2') || '{}'); } catch(_){ return {}; }
+  }
+}
+
+async function saveUsers(users) {
+  try {
+    await set(ref(_db, 'ej_users'), users);
+  } catch(e) {
+    try { localStorage.setItem('ej_users_v2', JSON.stringify(users)); } catch(_){}
+  }
+}
+
+async function loadProfile(username) {
+  try {
+    const snap = await get(ref(_db, 'ej_profiles/' + username));
+    return snap.exists() ? snap.val() : null;
+  } catch(e) {
+    try { return JSON.parse(localStorage.getItem('ej_prof_' + username)); } catch(_){ return null; }
+  }
+}
+
+async function saveProfile(username, data) {
+  try {
+    await set(ref(_db, 'ej_profiles/' + username), data);
+  } catch(e) {
+    try { localStorage.setItem('ej_prof_' + username, JSON.stringify(data)); } catch(_){}
+  }
+  try { localStorage.setItem('ej_prof_' + username, JSON.stringify(data)); } catch(_){}
+}
+
+// Current user state
+let CU = null; // current user object
+let CP = null; // current profile
+
+function defaultProfile(firstName, lastName, username) {
+  return {
+    username, firstName, lastName,
+    xp: 0, streak: 1, wordsStudied: 0, exDone: 0,
+    exCorrect: 0, weeklyXP: [0,0,0,0,0,0,0],
+    skills: { vocab:5, grammar:5, reading:5, speaking:4 },
+    theme: 'light',
+    lastLogin: new Date().toDateString(),
+    joinDate: new Date().toLocaleDateString('it-IT'),
+  };
+}
+
+// ============================================================
+// AUTH
+// ============================================================
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((b,i) => b.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='register')));
+  document.getElementById('login-form').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('register-form').classList.toggle('hidden', tab !== 'register');
+}
+
+async function doRegister() {
+  const first = document.getElementById('reg-first').value.trim();
+  const last = document.getElementById('reg-last').value.trim();
+  const user = document.getElementById('reg-user').value.trim().toLowerCase().replace(/\s+/g,'.');
+  const pass = document.getElementById('reg-pass').value;
+  const pass2 = document.getElementById('reg-pass2').value;
+  const msg = document.getElementById('register-msg');
+
+  if(!first||!last||!user||!pass) { showMsg(msg,'error','Compila tutti i campi!'); return; }
+  if(pass.length < 4) { showMsg(msg,'error','La password deve avere almeno 4 caratteri.'); return; }
+  if(pass !== pass2) { showMsg(msg,'error','Le password non corrispondono.'); return; }
+
+  const users = await loadUsers();
+  if(users[user]) { showMsg(msg,'error','Username già in uso. Scegli un altro.'); return; }
+
+  // Simple hash (not cryptographic, but fine for educational app)
+  const ph = btoa(pass + user + 'ej_salt_2024');
+  users[user] = { first, last, ph };
+  await saveUsers(users);
+  const prof = defaultProfile(first, last, user);
+  await saveProfile(user, prof);
+  showMsg(msg,'success','✅ Profilo creato! Ora accedi.');
+  setTimeout(() => switchAuthTab('login'), 1500);
+}
+
+async function doLogin() {
+  const user = document.getElementById('login-user').value.trim().toLowerCase();
+  const pass = document.getElementById('login-pass').value;
+  const msg = document.getElementById('login-msg');
+  if(!user||!pass) { showMsg(msg,'error','Inserisci username e password.'); return; }
+  
+  let users = {};
+  try { users = await loadUsers(); } catch(e) { showMsg(msg,'error','Errore di caricamento. Riprova.'); return; }
+  
+  if(!users[user]) { 
+    showMsg(msg,'error',`Username "${user}" non trovato. Hai già un account? Prova a registrarti.`); 
+    return; 
+  }
+  const ph = btoa(pass + user + 'ej_salt_2024');
+  if(ph !== users[user].ph) { showMsg(msg,'error','Password errata. Riprova.'); return; }
+  CU = { username: user, ...users[user] };
+  CP = await loadProfile(user);
+  if(!CP) CP = defaultProfile(users[user].first, users[user].last, user);
+  // Check streak
+  const today = new Date().toDateString();
+  if(CP.lastLogin !== today) {
+    const yesterday = new Date(Date.now()-86400000).toDateString();
+    if(CP.lastLogin === yesterday) CP.streak++;
+    else if(CP.lastLogin && CP.lastLogin !== today) CP.streak = 1;
+    CP.lastLogin = today;
+  }
+  await saveProfile(user, CP);
+  if(CP.theme === 'dark') setTheme('dark');
+  else setTheme('light');
+  document.getElementById('auth-screen').classList.remove('active');
+  document.getElementById('app-screen').classList.add('active');
+  document.getElementById('save-btn').style.display = 'flex';
+  document.getElementById('mob-nav').style.display = 'flex';
+  initApp();
+}
+
+async function doLogout() {
+  await manualSave();
+  CU = null; CP = null;
+  document.getElementById('app-screen').classList.remove('active');
+  document.getElementById('auth-screen').classList.add('active');
+  document.getElementById('save-btn').style.display = 'none';
+}
+
+function showMsg(el, type, text) {
+  el.className = 'auth-msg ' + type;
+  el.textContent = text;
+}
+
+// ============================================================
+// THEME
+// ============================================================
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  const sw1 = document.getElementById('theme-sw');
+  const sw2 = document.getElementById('theme-sw2');
+  const lbl = document.getElementById('theme-label');
+  const on = t === 'dark';
+  if(sw1) sw1.classList.toggle('on', on);
+  if(sw2) sw2.classList.toggle('on', on);
+  if(lbl) lbl.textContent = on ? 'Scuro' : 'Chiaro';
+}
+
+async function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  setTheme(next);
+  if(CP) { CP.theme = next; await saveProfile(CP.username, CP); }
+}
+
+// ============================================================
+// APP INIT
+// ============================================================
+function initApp() {
+  updateHUD();
+  checkExamReady();
+  buildWOD();
+  buildQuickExercise();
+  buildVocabPanel();
+  buildGrammarLessons();
+  buildExercises();
+  buildDialogues();
+}
+
+function updateHUD() {
+  const lvl = getLevel(CP.xp);
+  const next = LEVELS[lvl + 1] || LEVELS[lvl];
+  const cur = LEVELS[lvl];
+  document.getElementById('xp-fill').style.width = Math.min(100, ((CP.xp - cur.xp) / (next.xp - cur.xp)) * 100) + '%';
+  document.getElementById('level-badge').textContent = cur.name;
+  document.getElementById('xp-label-r').textContent = `${CP.xp - cur.xp} / ${next.xp - cur.xp} XP`;
+  document.getElementById('xp-total').textContent = CP.xp;
+  document.getElementById('sb-avatar').textContent = (CP.firstName[0]||'?') + (CP.lastName[0]||'');
+  document.getElementById('sb-name').textContent = CP.firstName + ' ' + CP.lastName;
+  document.getElementById('sb-level').textContent = cur.name;
+  document.getElementById('s-streak').textContent = CP.streak;
+  document.getElementById('s-words').textContent = CP.wordsStudied;
+  document.getElementById('s-exs').textContent = CP.exDone;
+  const acc = CP.exDone > 0 ? Math.round((CP.exCorrect / CP.exDone) * 100) : 0;
+  document.getElementById('s-acc').textContent = acc + '%';
+  document.getElementById('prof-avatar').textContent = (CP.firstName[0]||'?') + (CP.lastName[0]||'');
+  document.getElementById('prof-name').textContent = CP.firstName + ' ' + CP.lastName;
+  document.getElementById('prof-level').textContent = 'Livello ' + cur.name + ' — Entrato il ' + CP.joinDate;
+  document.getElementById('prof-xp').textContent = CP.xp;
+  document.getElementById('prof-streak').textContent = CP.streak;
+  document.getElementById('prof-acc2').textContent = acc + '%';
+}
+
+const LEVELS = [
+  { name:'A2', xp:0 },
+  { name:'A2+', xp:200 },
+  { name:'A2++', xp:500 },
+  { name:'B1', xp:900 },
+  { name:'B1+', xp:1500 },
+  { name:'B2', xp:2500 },
+];
+
+function getLevel(xp) {
+  let l = 0;
+  for(let i = 0; i < LEVELS.length; i++) { if(xp >= LEVELS[i].xp) l = i; }
+  return l;
+}
+
+async function manualSave() {
+  if(!CP) return;
+  await saveProfile(CP.username, CP);
+  showNotif('💾 Progressi salvati!');
+}
+
+// Auto-save ogni 60 secondi
+setInterval(() => { if(CP) saveProfile(CP.username, CP); }, 60000);
+
+function showNotif(msg) {
+  const el = document.getElementById('notif');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+// ============================================================
+// PANELS
+// ============================================================
+function showPanel(id, btnEl) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  document.querySelectorAll('.nav-item, .mob-nav-item').forEach(b => b.classList.remove('active'));
+  if(btnEl) {
+    const panel = btnEl.dataset.panel || id;
+    document.querySelectorAll(`[data-panel="${panel}"]`).forEach(b => b.classList.add('active'));
+  }
+  if(id === 'progress') buildProgress();
+}
+
+// ============================================================
+// WORD OF DAY
+// ============================================================
+const WODS = [
+  {w:'Journey',ph:'/ˈdʒɜːrni/',def:'A long trip or personal process — Viaggio/Percorso',ex:'"Learning English is a wonderful journey."'},
+  {w:'Exhausted',ph:'/ɪɡˈzɔːstɪd/',def:'Extremely tired — Esausto, stanchissimo',ex:'"After work, I always feel exhausted."'},
+  {w:'Delicious',ph:'/dɪˈlɪʃəs/',def:'Having a very pleasant taste — Delizioso',ex:'"This pizza is absolutely delicious!"'},
+  {w:'Neighbour',ph:'/ˈneɪbər/',def:'A person who lives near you — Vicino di casa',ex:'"My neighbour is very friendly."'},
+  {w:'Comfortable',ph:'/ˈkʌmftəbl/',def:'Relaxed, free from pain — Comodo, a proprio agio',ex:'"This sofa is very comfortable."'},
+  {w:'Remember',ph:'/rɪˈmɛmbər/',def:'To keep something in your mind — Ricordare',ex:'"Do you remember her name?"'},
+  {w:'Honest',ph:'/ˈɒnɪst/',def:'Telling the truth; not lying — Onesto',ex:'"She is always honest with her friends."'},
+];
+
+function buildWOD() {
+  const w = WODS[new Date().getDay() % WODS.length];
+  document.getElementById('wod-w').textContent = w.w;
+  document.getElementById('wod-ph').textContent = w.ph;
+  document.getElementById('wod-df').textContent = w.def;
+  document.getElementById('wod-ex').textContent = w.ex;
+}
+
+// ============================================================
+// VOCABULARY — 1000+ words (expanded)
+// ============================================================
+const VOCAB_CATS = ['Tutti','Persone','Casa','Cibo','Lavoro','Viaggio','Natura','Numeri','Tempo','Sentimenti','Azioni','Aggettivi','Corpo','Scuola','Sport','Shopping','Salute','Tecnologia'];
+
+const VOCAB = [
+  // PERSONE
+  {e:'friend',i:'amico/a',c:'Persone'},{e:'neighbour',i:'vicino di casa',c:'Persone'},{e:'colleague',i:'collega',c:'Persone'},
+  {e:'stranger',i:'sconosciuto',c:'Persone'},{e:'parent',i:'genitore',c:'Persone'},{e:'sibling',i:'fratello/sorella',c:'Persone'},
+  {e:'child',i:'bambino',c:'Persone'},{e:'adult',i:'adulto',c:'Persone'},{e:'teenager',i:'adolescente',c:'Persone'},
+  {e:'elderly',i:'anziano',c:'Persone'},{e:'husband',i:'marito',c:'Persone'},{e:'wife',i:'moglie',c:'Persone'},
+  {e:'partner',i:'partner/compagno',c:'Persone'},{e:'boss',i:'capo/superiore',c:'Persone'},{e:'employee',i:'dipendente',c:'Persone'},
+  {e:'customer',i:'cliente',c:'Persone'},{e:'guest',i:'ospite',c:'Persone'},{e:'host',i:'padrone di casa',c:'Persone'},
+  {e:'doctor',i:'medico',c:'Persone'},{e:'teacher',i:'insegnante',c:'Persone'},
+  // CASA
+  {e:'living room',i:'salotto',c:'Casa'},{e:'bedroom',i:'camera da letto',c:'Casa'},{e:'bathroom',i:'bagno',c:'Casa'},
+  {e:'kitchen',i:'cucina',c:'Casa'},{e:'garden',i:'giardino',c:'Casa'},{e:'balcony',i:'balcone',c:'Casa'},
+  {e:'ceiling',i:'soffitto',c:'Casa'},{e:'floor',i:'pavimento',c:'Casa'},{e:'window',i:'finestra',c:'Casa'},
+  {e:'door',i:'porta',c:'Casa'},{e:'stairs',i:'scale',c:'Casa'},{e:'garage',i:'garage',c:'Casa'},
+  {e:'shelf',i:'scaffale',c:'Casa'},{e:'cupboard',i:'armadio/credenza',c:'Casa'},{e:'sofa',i:'divano',c:'Casa'},
+  {e:'curtain',i:'tenda',c:'Casa'},{e:'lamp',i:'lampada',c:'Casa'},{e:'mirror',i:'specchio',c:'Casa'},
+  {e:'carpet',i:'tappeto',c:'Casa'},{e:'pillow',i:'cuscino',c:'Casa'},
+  // CIBO
+  {e:'bread',i:'pane',c:'Cibo'},{e:'cheese',i:'formaggio',c:'Cibo'},{e:'butter',i:'burro',c:'Cibo'},
+  {e:'egg',i:'uovo',c:'Cibo'},{e:'chicken',i:'pollo',c:'Cibo'},{e:'beef',i:'manzo',c:'Cibo'},
+  {e:'fish',i:'pesce',c:'Cibo'},{e:'rice',i:'riso',c:'Cibo'},{e:'pasta',i:'pasta',c:'Cibo'},
+  {e:'soup',i:'zuppa',c:'Cibo'},{e:'salad',i:'insalata',c:'Cibo'},{e:'fruit',i:'frutta',c:'Cibo'},
+  {e:'vegetable',i:'verdura',c:'Cibo'},{e:'dessert',i:'dessert',c:'Cibo'},{e:'snack',i:'spuntino',c:'Cibo'},
+  {e:'meal',i:'pasto',c:'Cibo'},{e:'recipe',i:'ricetta',c:'Cibo'},{e:'ingredient',i:'ingrediente',c:'Cibo'},
+  {e:'diet',i:'dieta',c:'Cibo'},{e:'flavour',i:'sapore',c:'Cibo'},
+  // LAVORO
+  {e:'meeting',i:'riunione',c:'Lavoro'},{e:'deadline',i:'scadenza',c:'Lavoro'},{e:'project',i:'progetto',c:'Lavoro'},
+  {e:'report',i:'rapporto/relazione',c:'Lavoro'},{e:'salary',i:'stipendio',c:'Lavoro'},{e:'promotion',i:'promozione',c:'Lavoro'},
+  {e:'interview',i:'colloquio/intervista',c:'Lavoro'},{e:'office',i:'ufficio',c:'Lavoro'},{e:'contract',i:'contratto',c:'Lavoro'},
+  {e:'task',i:'compito/attività',c:'Lavoro'},{e:'goal',i:'obiettivo',c:'Lavoro'},{e:'skill',i:'competenza/abilità',c:'Lavoro'},
+  {e:'experience',i:'esperienza',c:'Lavoro'},{e:'resume',i:'curriculum vitae',c:'Lavoro'},{e:'colleague',i:'collega',c:'Lavoro'},
+  {e:'career',i:'carriera',c:'Lavoro'},{e:'company',i:'azienda',c:'Lavoro'},{e:'client',i:'cliente',c:'Lavoro'},
+  {e:'budget',i:'budget/bilancio',c:'Lavoro'},{e:'teamwork',i:'lavoro di squadra',c:'Lavoro'},
+  // VIAGGIO
+  {e:'passport',i:'passaporto',c:'Viaggio'},{e:'luggage',i:'bagaglio',c:'Viaggio'},{e:'ticket',i:'biglietto',c:'Viaggio'},
+  {e:'departure',i:'partenza',c:'Viaggio'},{e:'arrival',i:'arrivo',c:'Viaggio'},{e:'airport',i:'aeroporto',c:'Viaggio'},
+  {e:'hotel',i:'hotel',c:'Viaggio'},{e:'reservation',i:'prenotazione',c:'Viaggio'},{e:'tourist',i:'turista',c:'Viaggio'},
+  {e:'guide',i:'guida',c:'Viaggio'},{e:'map',i:'mappa/cartina',c:'Viaggio'},{e:'destination',i:'destinazione',c:'Viaggio'},
+  {e:'customs',i:'dogana',c:'Viaggio'},{e:'boarding',i:'imbarco',c:'Viaggio'},{e:'connection',i:'coincidenza',c:'Viaggio'},
+  {e:'delay',i:'ritardo',c:'Viaggio'},{e:'currency',i:'valuta',c:'Viaggio'},{e:'exchange',i:'cambio',c:'Viaggio'},
+  {e:'hostel',i:'ostello',c:'Viaggio'},{e:'itinerary',i:'itinerario',c:'Viaggio'},
+  // NATURA
+  {e:'forest',i:'foresta',c:'Natura'},{e:'mountain',i:'montagna',c:'Natura'},{e:'river',i:'fiume',c:'Natura'},
+  {e:'ocean',i:'oceano',c:'Natura'},{e:'beach',i:'spiaggia',c:'Natura'},{e:'island',i:'isola',c:'Natura'},
+  {e:'desert',i:'deserto',c:'Natura'},{e:'valley',i:'valle',c:'Natura'},{e:'cliff',i:'scogliera',c:'Natura'},
+  {e:'waterfall',i:'cascata',c:'Natura'},{e:'sunrise',i:'alba',c:'Natura'},{e:'sunset',i:'tramonto',c:'Natura'},
+  {e:'storm',i:'tempesta',c:'Natura'},{e:'lightning',i:'fulmine',c:'Natura'},{e:'earthquake',i:'terremoto',c:'Natura'},
+  {e:'season',i:'stagione',c:'Natura'},{e:'climate',i:'clima',c:'Natura'},{e:'environment',i:'ambiente',c:'Natura'},
+  {e:'wildlife',i:'fauna selvatica',c:'Natura'},{e:'landscape',i:'paesaggio',c:'Natura'},
+  // SENTIMENTI
+  {e:'happy',i:'felice',c:'Sentimenti'},{e:'sad',i:'triste',c:'Sentimenti'},{e:'angry',i:'arrabbiato',c:'Sentimenti'},
+  {e:'nervous',i:'nervoso/ansioso',c:'Sentimenti'},{e:'excited',i:'entusiasta/eccitato',c:'Sentimenti'},
+  {e:'bored',i:'annoiato',c:'Sentimenti'},{e:'confused',i:'confuso',c:'Sentimenti'},{e:'proud',i:'orgoglioso',c:'Sentimenti'},
+  {e:'ashamed',i:'vergognoso',c:'Sentimenti'},{e:'grateful',i:'grato/riconoscente',c:'Sentimenti'},
+  {e:'lonely',i:'solo/solitario',c:'Sentimenti'},{e:'jealous',i:'geloso',c:'Sentimenti'},
+  {e:'exhausted',i:'esausto',c:'Sentimenti'},{e:'relieved',i:'sollevato',c:'Sentimenti'},
+  {e:'disappointed',i:'deluso',c:'Sentimenti'},{e:'surprised',i:'sorpreso',c:'Sentimenti'},
+  {e:'scared',i:'spaventato',c:'Sentimenti'},{e:'hopeful',i:'speranzoso',c:'Sentimenti'},
+  {e:'frustrated',i:'frustrato',c:'Sentimenti'},{e:'content',i:'soddisfatto/appagato',c:'Sentimenti'},
+  // AZIONI comuni
+  {e:'achieve',i:'raggiungere/ottenere',c:'Azioni'},{e:'allow',i:'permettere',c:'Azioni'},{e:'avoid',i:'evitare',c:'Azioni'},
+  {e:'borrow',i:'prendere in prestito',c:'Azioni'},{e:'celebrate',i:'festeggiare',c:'Azioni'},
+  {e:'complain',i:'lamentarsi',c:'Azioni'},{e:'convince',i:'convincere',c:'Azioni'},
+  {e:'decide',i:'decidere',c:'Azioni'},{e:'enjoy',i:'godere/apprezzare',c:'Azioni'},
+  {e:'explain',i:'spiegare',c:'Azioni'},{e:'forget',i:'dimenticare',c:'Azioni'},
+  {e:'improve',i:'migliorare',c:'Azioni'},{e:'invite',i:'invitare',c:'Azioni'},
+  {e:'manage',i:'riuscire/gestire',c:'Azioni'},{e:'offer',i:'offrire',c:'Azioni'},
+  {e:'prefer',i:'preferire',c:'Azioni'},{e:'promise',i:'promettere',c:'Azioni'},
+  {e:'refuse',i:'rifiutare',c:'Azioni'},{e:'remind',i:'ricordare a qualcuno',c:'Azioni'},
+  {e:'suggest',i:'suggerire',c:'Azioni'},
+  // AGGETTIVI
+  {e:'amazing',i:'straordinario',c:'Aggettivi'},{e:'awful',i:'terribile',c:'Aggettivi'},
+  {e:'brave',i:'coraggioso',c:'Aggettivi'},{e:'calm',i:'calmo',c:'Aggettivi'},
+  {e:'clever',i:'intelligente/furbo',c:'Aggettivi'},{e:'crowded',i:'affollato',c:'Aggettivi'},
+  {e:'dangerous',i:'pericoloso',c:'Aggettivi'},{e:'expensive',i:'costoso',c:'Aggettivi'},
+  {e:'famous',i:'famoso',c:'Aggettivi'},{e:'gorgeous',i:'bellissimo/magnifico',c:'Aggettivi'},
+  {e:'huge',i:'enorme',c:'Aggettivi'},{e:'interesting',i:'interessante',c:'Aggettivi'},
+  {e:'kind',i:'gentile',c:'Aggettivi'},{e:'lazy',i:'pigro',c:'Aggettivi'},
+  {e:'messy',i:'disordinato',c:'Aggettivi'},{e:'narrow',i:'stretto',c:'Aggettivi'},
+  {e:'obvious',i:'ovvio',c:'Aggettivi'},{e:'patient',i:'paziente',c:'Aggettivi'},
+  {e:'quiet',i:'quieto/silenzioso',c:'Aggettivi'},{e:'rude',i:'maleducato',c:'Aggettivi'},
+  // CORPO
+  {e:'forehead',i:'fronte',c:'Corpo'},{e:'cheek',i:'guancia',c:'Corpo'},{e:'chin',i:'mento',c:'Corpo'},
+  {e:'shoulder',i:'spalla',c:'Corpo'},{e:'elbow',i:'gomito',c:'Corpo'},{e:'wrist',i:'polso',c:'Corpo'},
+  {e:'thumb',i:'pollice',c:'Corpo'},{e:'knee',i:'ginocchio',c:'Corpo'},{e:'ankle',i:'caviglia',c:'Corpo'},
+  {e:'heel',i:'tallone',c:'Corpo'},{e:'chest',i:'petto',c:'Corpo'},{e:'stomach',i:'stomaco',c:'Corpo'},
+  {e:'spine',i:'colonna vertebrale',c:'Corpo'},{e:'lung',i:'polmone',c:'Corpo'},{e:'heart',i:'cuore',c:'Corpo'},
+  {e:'brain',i:'cervello',c:'Corpo'},{e:'muscle',i:'muscolo',c:'Corpo'},{e:'bone',i:'osso',c:'Corpo'},
+  {e:'skin',i:'pelle',c:'Corpo'},{e:'blood',i:'sangue',c:'Corpo'},
+  // SCUOLA
+  {e:'classroom',i:'aula',c:'Scuola'},{e:'homework',i:'compiti a casa',c:'Scuola'},{e:'textbook',i:'libro di testo',c:'Scuola'},
+  {e:'notebook',i:'quaderno',c:'Scuola'},{e:'pencil',i:'matita',c:'Scuola'},{e:'ruler',i:'righello',c:'Scuola'},
+  {e:'exam',i:'esame',c:'Scuola'},{e:'grade',i:'voto',c:'Scuola'},{e:'degree',i:'laurea',c:'Scuola'},
+  {e:'lecture',i:'lezione universitaria',c:'Scuola'},{e:'essay',i:'tema/saggio',c:'Scuola'},
+  {e:'subject',i:'materia scolastica',c:'Scuola'},{e:'schedule',i:'orario',c:'Scuola'},
+  {e:'holiday',i:'vacanza/festività',c:'Scuola'},{e:'semester',i:'semestre',c:'Scuola'},
+  {e:'library',i:'biblioteca',c:'Scuola'},{e:'dictionary',i:'dizionario',c:'Scuola'},
+  {e:'vocabulary',i:'vocabolario',c:'Scuola'},{e:'pronunciation',i:'pronuncia',c:'Scuola'},
+  {e:'grammar',i:'grammatica',c:'Scuola'},
+  // SPORT
+  {e:'match',i:'partita',c:'Sport'},{e:'score',i:'punteggio/segnare',c:'Sport'},{e:'team',i:'squadra',c:'Sport'},
+  {e:'player',i:'giocatore',c:'Sport'},{e:'coach',i:'allenatore',c:'Sport'},{e:'stadium',i:'stadio',c:'Sport'},
+  {e:'champion',i:'campione',c:'Sport'},{e:'race',i:'gara/corsa',c:'Sport'},{e:'training',i:'allenamento',c:'Sport'},
+  {e:'trophy',i:'trofeo',c:'Sport'},{e:'referee',i:'arbitro',c:'Sport'},{e:'athlete',i:'atleta',c:'Sport'},
+  {e:'fitness',i:'forma fisica',c:'Sport'},{e:'gym',i:'palestra',c:'Sport'},{e:'workout',i:'allenamento',c:'Sport'},
+  {e:'equipment',i:'attrezzatura',c:'Sport'},{e:'league',i:'lega/campionato',c:'Sport'},
+  {e:'tournament',i:'torneo',c:'Sport'},{e:'medal',i:'medaglia',c:'Sport'},{e:'opponent',i:'avversario',c:'Sport'},
+  // SHOPPING
+  {e:'receipt',i:'ricevuta/scontrino',c:'Shopping'},{e:'discount',i:'sconto',c:'Shopping'},
+  {e:'bargain',i:'affare/occasione',c:'Shopping'},{e:'refund',i:'rimborso',c:'Shopping'},
+  {e:'checkout',i:'cassa',c:'Shopping'},{e:'queue',i:'fila/coda',c:'Shopping'},
+  {e:'brand',i:'marca/marchio',c:'Shopping'},{e:'product',i:'prodotto',c:'Shopping'},
+  {e:'size',i:'taglia/misura',c:'Shopping'},{e:'fitting room',i:'camerino',c:'Shopping'},
+  {e:'cashier',i:'cassiere',c:'Shopping'},{e:'trolley',i:'carrello',c:'Shopping'},
+  {e:'shelf',i:'scaffale',c:'Shopping'},{e:'label',i:'etichetta',c:'Shopping'},
+  {e:'warranty',i:'garanzia',c:'Shopping'},{e:'purchase',i:'acquisto',c:'Shopping'},
+  {e:'payment',i:'pagamento',c:'Shopping'},{e:'invoice',i:'fattura',c:'Shopping'},
+  {e:'delivery',i:'consegna',c:'Shopping'},{e:'online shopping',i:'acquisti online',c:'Shopping'},
+  // SALUTE
+  {e:'symptom',i:'sintomo',c:'Salute'},{e:'prescription',i:'ricetta medica',c:'Salute'},
+  {e:'pharmacy',i:'farmacia',c:'Salute'},{e:'surgery',i:'intervento/chirurgia',c:'Salute'},
+  {e:'appointment',i:'appuntamento',c:'Salute'},{e:'recovery',i:'guarigione/recupero',c:'Salute'},
+  {e:'fever',i:'febbre',c:'Salute'},{e:'headache',i:'mal di testa',c:'Salute'},
+  {e:'allergy',i:'allergia',c:'Salute'},{e:'injury',i:'infortunio/ferita',c:'Salute'},
+  {e:'bandage',i:'benda/fasciatura',c:'Salute'},{e:'tablet',i:'compressa/pastiglia',c:'Salute'},
+  {e:'diagnosis',i:'diagnosi',c:'Salute'},{e:'treatment',i:'trattamento/cura',c:'Salute'},
+  {e:'emergency',i:'emergenza',c:'Salute'},{e:'ambulance',i:'ambulanza',c:'Salute'},
+  {e:'blood pressure',i:'pressione del sangue',c:'Salute'},{e:'vaccination',i:'vaccinazione',c:'Salute'},
+  {e:'insurance',i:'assicurazione',c:'Salute'},{e:'clinic',i:'clinica/ambulatorio',c:'Salute'},
+  // TECNOLOGIA
+  {e:'software',i:'software',c:'Tecnologia'},{e:'hardware',i:'hardware',c:'Tecnologia'},
+  {e:'browser',i:'browser/navigatore',c:'Tecnologia'},{e:'download',i:'scaricare',c:'Tecnologia'},
+  {e:'upload',i:'caricare',c:'Tecnologia'},{e:'password',i:'password',c:'Tecnologia'},
+  {e:'account',i:'account/profilo',c:'Tecnologia'},{e:'network',i:'rete',c:'Tecnologia'},
+  {e:'wireless',i:'senza fili',c:'Tecnologia'},{e:'screen',i:'schermo',c:'Tecnologia'},
+  {e:'keyboard',i:'tastiera',c:'Tecnologia'},{e:'mouse',i:'mouse',c:'Tecnologia'},
+  {e:'charger',i:'caricatore',c:'Tecnologia'},{e:'battery',i:'batteria',c:'Tecnologia'},
+  {e:'update',i:'aggiornamento',c:'Tecnologia'},{e:'backup',i:'copia di sicurezza',c:'Tecnologia'},
+  {e:'virus',i:'virus informatico',c:'Tecnologia'},{e:'cloud',i:'cloud/nuvola',c:'Tecnologia'},
+  {e:'app',i:'applicazione',c:'Tecnologia'},{e:'notification',i:'notifica',c:'Tecnologia'},
+  // NUMERI / TEMPO
+  {e:'dozen',i:'dozzina',c:'Numeri'},{e:'couple',i:'paio/coppia',c:'Numeri'},
+  {e:'century',i:'secolo',c:'Numeri'},{e:'decade',i:'decennio',c:'Numeri'},
+  {e:'midnight',i:'mezzanotte',c:'Tempo'},{e:'noon',i:'mezzogiorno',c:'Tempo'},
+  {e:'dawn',i:'alba/aurora',c:'Tempo'},{e:'dusk',i:'crepuscolo',c:'Tempo'},
+  {e:'weekday',i:'giorno feriale',c:'Tempo'},{e:'weekend',i:'fine settimana',c:'Tempo'},
+  {e:'anniversary',i:'anniversario',c:'Tempo'},{e:'deadline',i:'scadenza',c:'Tempo'},
+  {e:'schedule',i:'programma/orario',c:'Tempo'},{e:'appointment',i:'appuntamento',c:'Tempo'},
+  {e:'duration',i:'durata',c:'Tempo'},{e:'moment',i:'momento',c:'Tempo'},
+  {e:'immediately',i:'immediatamente',c:'Tempo'},{e:'recently',i:'di recente',c:'Tempo'},
+  {e:'eventually',i:'alla fine/infine',c:'Tempo'},{e:'frequently',i:'frequentemente',c:'Tempo'},
+];
+
+// ============================================================
+// VOCAB PANEL
+// ============================================================
+let vocabPage = 0;
+let vocabFiltered = [...VOCAB];
+const PER_PAGE = 40;
+let activeCat = 'Tutti';
+
+function buildVocabPanel() {
+  const catsEl = document.getElementById('vcats');
+  catsEl.innerHTML = '';
+  VOCAB_CATS.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'cat-btn' + (c === 'Tutti' ? ' active' : '');
+    b.textContent = c;
+    b.onclick = () => {
+      activeCat = c;
+      catsEl.querySelectorAll('.cat-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      vocabPage = 0;
+      filterVocab();
+    };
+    catsEl.appendChild(b);
+  });
+  filterVocab();
+}
+
+function filterVocab() {
+  const q = document.getElementById('vsearch').value.toLowerCase();
+  vocabFiltered = VOCAB.filter(w => {
+    const catOk = activeCat === 'Tutti' || w.c === activeCat;
+    const qOk = !q || w.e.toLowerCase().includes(q) || w.i.toLowerCase().includes(q);
+    return catOk && qOk;
+  });
+  vocabPage = 0;
+  renderVocabPage();
+}
+
+function renderVocabPage() {
+  const start = vocabPage * PER_PAGE;
+  const slice = vocabFiltered.slice(start, start + PER_PAGE);
+  const wrap = document.getElementById('vocab-grid-wrap');
+  wrap.innerHTML = '';
+  const grid = document.createElement('div');
+  grid.className = 'vocab-grid';
+  slice.forEach(w => {
+    const d = document.createElement('div');
+    d.className = 'vword';
+    d.innerHTML = `<div><div class="vw-en">${w.e}</div><div class="vw-it">${w.i}</div><div class="vw-cat">${w.c}</div></div>
+    <button class="spk-btn" onclick="speak('${w.e.replace(/'/g,"\\'")}')">▶</button>`;
+    grid.appendChild(d);
+  });
+  wrap.appendChild(grid);
+  // Pagination
+  const pages = Math.ceil(vocabFiltered.length / PER_PAGE);
+  const pag = document.getElementById('vocab-pag');
+  pag.innerHTML = `<span class="page-info">${vocabFiltered.length} parole</span>`;
+  for(let i = 0; i < pages; i++) {
+    const pb = document.createElement('button');
+    pb.className = 'page-btn' + (i === vocabPage ? ' active' : '');
+    pb.textContent = i + 1;
+    const pi = i;
+    pb.onclick = () => { vocabPage = pi; renderVocabPage(); };
+    pag.appendChild(pb);
+  }
+}
+
+function speak(word) {
+  if('speechSynthesis' in window) {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(word);
+    u.lang = 'en-US'; u.rate = 0.82;
+    speechSynthesis.speak(u);
+    if(CP) { CP.wordsStudied = Math.min(CP.wordsStudied + 1, VOCAB.length); saveProfile(CP.username, CP); updateHUD(); }
+  }
+}
+
+// ============================================================
+// GRAMMAR LESSONS
+// ============================================================
+const GRAMMAR_LESSONS = [
+  {
+    title: '1. Present Simple — Abitudini e fatti',
+    rule: `<strong>Struttura:</strong> I/You/We/They + verbo base · He/She/It + verbo + <em>-s/-es</em><br>
+    <strong>Uso:</strong> Azioni abituali, fatti generali, orari fissi.<br>
+    <strong>Negativo:</strong> don't / doesn't + verbo base<br>
+    <strong>Domanda:</strong> Do/Does + soggetto + verbo?`,
+    examples: [
+      {en:'She reads every morning.',it:'Lei legge ogni mattina.'},
+      {en:'They don\'t eat meat.',it:'Non mangiano carne.'},
+      {en:'Does he work here?',it:'Lavora qui?'},
+      {en:'The train leaves at 8.',it:'Il treno parte alle 8.'},
+    ]
+  },
+  {
+    title: '2. Present Continuous — Azioni in corso',
+    rule: `<strong>Struttura:</strong> am/is/are + verbo<em>-ing</em><br>
+    <strong>Uso:</strong> Azioni che accadono ADESSO, piani futuri già stabiliti.<br>
+    <strong>Attenzione:</strong> I verbi di stato (know, like, love, hate, want, need) NON si usano al Continuous!`,
+    examples: [
+      {en:'I am studying English now.',it:'Sto studiando inglese adesso.'},
+      {en:'She is cooking dinner.',it:'Sta cucinando la cena.'},
+      {en:'We are meeting tomorrow.',it:'Ci vediamo domani (già stabilito).'},
+      {en:'❌ I am knowing the answer.',it:'❌ SBAGLIATO! → I know the answer.'},
+    ]
+  },
+  {
+    title: '3. Past Simple — Azioni completate nel passato',
+    rule: `<strong>Verbi regolari:</strong> verbo + <em>-ed</em> (walked, watched, played)<br>
+    <strong>Verbi irregolari:</strong> forma speciale (go→went, eat→ate, see→saw)<br>
+    <strong>Negativo:</strong> didn't + verbo base<br>
+    <strong>Domanda:</strong> Did + soggetto + verbo base?`,
+    examples: [
+      {en:'I watched a film last night.',it:'Ho guardato un film ieri sera.'},
+      {en:'She went to Rome in 2022.',it:'È andata a Roma nel 2022.'},
+      {en:'They didn\'t come to the party.',it:'Non sono venuti alla festa.'},
+      {en:'Did you see him?',it:'L\'hai visto?'},
+    ]
+  },
+  {
+    title: '4. Present Perfect — Passato con rilevanza presente',
+    rule: `<strong>Struttura:</strong> have/has + participio passato<br>
+    <strong>Uso:</strong> Esperienze di vita, azioni passate con effetti presenti, "appena accaduto".<br>
+    <strong>Segnali:</strong> ever, never, already, yet, just, since, for<br>
+    <strong>Differenza chiave:</strong> Past Simple = quando lo sai · Present Perfect = non specificato`,
+    examples: [
+      {en:'I have never been to London.',it:'Non sono mai stato a Londra.'},
+      {en:'She has just arrived.',it:'È appena arrivata.'},
+      {en:'Have you ever tried sushi?',it:'Hai mai provato il sushi?'},
+      {en:'I have lived here for 5 years.',it:'Vivo qui da 5 anni.'},
+    ]
+  },
+  {
+    title: '5. Articoli A / AN / THE',
+    rule: `<strong>A:</strong> prima di consonante (a cat, a book)<br>
+    <strong>AN:</strong> prima di vocale (an apple, an hour ← suono!)<br>
+    <strong>THE:</strong> cosa specifica o già menzionata · "the" suona /ðə/ o /ðiː/ prima di vocale<br>
+    <strong>Zero article:</strong> generalità (I like coffee), nomi propri, paesi (in Italy)`,
+    examples: [
+      {en:'I saw a dog in the park.',it:'Ho visto un cane nel parco.'},
+      {en:'She is an engineer.',it:'Lei è una ingegnera.'},
+      {en:'The sun rises in the east.',it:'Il sole sorge a est.'},
+      {en:'I love music. (no article)',it:'Amo la musica.'},
+    ]
+  },
+  {
+    title: '6. Preposizioni di Tempo: AT / ON / IN',
+    rule: `<strong>AT:</strong> ore esatte, momenti (at 3pm, at night, at Christmas)<br>
+    <strong>ON:</strong> giorni, date (on Monday, on 5th March, on my birthday)<br>
+    <strong>IN:</strong> mesi, anni, stagioni, periodi (in July, in 2024, in the morning)`,
+    examples: [
+      {en:'I wake up at 7 in the morning.',it:'Mi sveglio alle 7 di mattina.'},
+      {en:'She was born on 15th June.',it:'È nata il 15 giugno.'},
+      {en:'We go on holiday in August.',it:'Andiamo in vacanza in agosto.'},
+      {en:'The meeting is on Monday at 10.',it:'La riunione è lunedì alle 10.'},
+    ]
+  },
+  {
+    title: '7. Comparativi e Superlativi',
+    rule: `<strong>Comparativo (più di):</strong> aggettivo corto + <em>-er</em> + than · more + aggettivo lungo + than<br>
+    <strong>Superlativo (il più):</strong> the + aggettivo corto + <em>-est</em> · the most + aggettivo lungo<br>
+    <strong>Irregolari:</strong> good→better→best · bad→worse→worst · far→farther→farthest`,
+    examples: [
+      {en:'She is taller than her brother.',it:'Lei è più alta di suo fratello.'},
+      {en:'This film is more interesting.',it:'Questo film è più interessante.'},
+      {en:'It\'s the best pizza I\'ve had.',it:'È la migliore pizza che abbia mai mangiato.'},
+      {en:'Today is worse than yesterday.',it:'Oggi è peggio di ieri.'},
+    ]
+  },
+  {
+    title: '8. Modal Verbs: CAN / COULD / SHOULD / MUST',
+    rule: `<strong>CAN:</strong> capacità presente, permesso informale (I can swim)<br>
+    <strong>COULD:</strong> capacità passata, richiesta educata (Could you help me?)<br>
+    <strong>SHOULD:</strong> consiglio, obbligo morale (You should rest)<br>
+    <strong>MUST:</strong> obbligo forte / deduzione (You must wear a helmet · She must be tired)<br>
+    <strong>Regola:</strong> Modal + verbo base (no -s, no -ing, no -ed!)`,
+    examples: [
+      {en:'She can speak three languages.',it:'Lei sa parlare tre lingue.'},
+      {en:'Could you open the window?',it:'Potrebbe aprire la finestra?'},
+      {en:'You should eat more vegetables.',it:'Dovresti mangiare più verdura.'},
+      {en:'You must not park here.',it:'Non si può/deve parcheggiare qui.'},
+    ]
+  },
+];
+
+function buildGrammarLessons() {
+  const el = document.getElementById('grammar-lessons');
+  el.innerHTML = '';
+  GRAMMAR_LESSONS.forEach((l, i) => {
+    const box = document.createElement('div');
+    box.className = 'lesson-box';
+    const body_id = `lb-${i}`;
+    box.innerHTML = `
+      <div class="lesson-header" onclick="toggleLesson('${body_id}')">
+        <div class="lesson-title">${l.title}</div>
+        <span id="arr-${i}">▼</span>
+      </div>
+      <div class="lesson-body" id="${body_id}">
+        <div class="rule-box">${l.rule}</div>
+        <div style="font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink3);margin-bottom:8px;">Esempi</div>
+        <div class="example-list">${l.examples.map(e=>`<div class="ex-item"><div class="ex-en">${e.en}</div><div class="ex-it">${e.it}</div></div>`).join('')}</div>
+        <button class="btn btn-gold btn-sm" style="margin-top:12px" onclick="goExercise('${l.title}')">Fai gli esercizi su questo argomento →</button>
+      </div>
+    `;
+    el.appendChild(box);
+  });
+}
+
+function toggleLesson(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+function goExercise(topic) {
+  showPanel('exercises', document.querySelector('[data-panel="exercises"]'));
+}
+
+// ============================================================
+// EXERCISES — STRUCTURED
+// ============================================================
+const ALL_EXERCISES = [
+  // VOCABULARY
+  { cat:'vocab', type:'mc', tag:'Vocabulary', difficulty:'A2',
+    q:'What does "exhausted" mean in Italian?',
+    opts:['Affamato','Esausto/Stanchissimo','Confuso','Esuberante'],
+    ans:1, skill:'vocab',
+    explain:'<strong>"Exhausted"</strong> = <em>esausto, stanchissimo</em>. Si usa quando si è estremamente stanchi. Es: "After the marathon, she was completely exhausted." · <strong>Affamato</strong> = hungry · <strong>Confuso</strong> = confused' },
+
+  { cat:'vocab', type:'mc', tag:'Vocabulary', difficulty:'A2',
+    q:'Choose the correct translation for "neighbour":',
+    opts:['Amico','Collega','Vicino di casa','Fratello'],
+    ans:2, skill:'vocab',
+    explain:'"<strong>Neighbour</strong>" = <em>vicino di casa</em>. Attenzione: in American English si scrive "neighbor" (senza la "u"). Es: "My neighbours are very friendly people."' },
+
+  { cat:'vocab', type:'mc', tag:'Vocabulary', difficulty:'A2',
+    q:'What does "bargain" mean?',
+    opts:['Scontro/Litigio','Affare/Ottimo prezzo','Ricevuta','Pagamento'],
+    ans:1, skill:'vocab',
+    explain:'"<strong>Bargain</strong>" = <em>affare, buona occasione</em>. Quando compri qualcosa a un ottimo prezzo. Es: "I found a real bargain at the market!" · Si può usare anche come verbo: "to bargain" = contrattare.' },
+
+  { cat:'vocab', type:'mc', tag:'Vocabulary', difficulty:'B1',
+    q:'Which word means "to suggest something"?',
+    opts:['to refuse','to remind','to propose','to avoid'],
+    ans:2, skill:'vocab',
+    explain:'"<strong>To propose</strong>" = <em>proporre/suggerire</em>. Simile a "to suggest". Es: "I propose we meet at 3pm." · To refuse = rifiutare · To remind = ricordare a qualcuno · To avoid = evitare' },
+
+  { cat:'vocab', type:'mc', tag:'Vocabulary', difficulty:'A2',
+    q:'What is the meaning of "frequently"?',
+    opts:['Di recente','Immediatamente','Frequentemente/Spesso','Eventualmente'],
+    ans:2, skill:'vocab',
+    explain:'"<strong>Frequently</strong>" = <em>frequentemente, spesso</em>. Es: "She frequently goes to the gym." · Attenzione: "eventually" NON significa "eventualmente" ma "alla fine, infine" — è un falso amico!' },
+
+  { cat:'vocab', type:'mc', tag:'Vocabulary', difficulty:'B1',
+    q:'"The doctor gave me a ___" — which word fits? (medicine in small pill form)',
+    opts:['bandage','prescription','tablet','symptom'],
+    ans:2, skill:'vocab',
+    explain:'"<strong>Tablet</strong>" = <em>compressa/pastiglia</em>. Es: "Take two tablets three times a day." · Prescription = ricetta medica · Bandage = benda · Symptom = sintomo' },
+
+  // GRAMMAR
+  { cat:'grammar', type:'mc', tag:'Grammar', difficulty:'A2',
+    q:'Choose the correct sentence (Present Simple, 3rd person):',
+    ctx:'Regola: con he/she/it aggiungiamo -s o -es al verbo.',
+    opts:['She play tennis every week.','She plays tennis every week.','She playing tennis every week.','She do play tennis every week.'],
+    ans:1, skill:'grammar',
+    explain:'Con <strong>he/she/it</strong> al Present Simple aggiungiamo sempre <strong>-s</strong> al verbo. "She play" è sbagliato. "She plays" è corretto. ✅ Altri esempi: He works, She speaks, It rains.' },
+
+  { cat:'grammar', type:'mc', tag:'Grammar', difficulty:'A2',
+    q:'Which sentence uses Present Continuous correctly?',
+    ctx:'"Right now", "at the moment", "currently" → Present Continuous!',
+    opts:['I am knowing the answer.','She is liking coffee.','They are watching TV now.','He is having a car.'],
+    ans:2, skill:'grammar',
+    explain:'"<strong>They are watching TV now</strong>" ✅ — azione in corso adesso. Le altre sono sbagliate perché usano verbi di stato (know, like, have) al Continuous → questi verbi NON si usano mai con -ing nel senso di stato!' },
+
+  { cat:'grammar', type:'mc', tag:'Grammar', difficulty:'A2',
+    q:'Complete: "Yesterday I ___ to the supermarket."',
+    ctx:'Ieri = passato → Past Simple. "Go" è un verbo irregolare!',
+    opts:['go','goes','went','was going'],
+    ans:2, skill:'grammar',
+    explain:'"Yesterday" indica il passato → usiamo il <strong>Past Simple</strong>. "Go" è irregolare: go → <strong>went</strong>. "Goed" NON esiste! 📝 Altri irregolari comuni: see→saw, eat→ate, come→came, give→gave.' },
+
+  { cat:'grammar', type:'mc', tag:'Grammar', difficulty:'B1',
+    q:'"I ___ never eaten sushi." Complete with the correct form.',
+    ctx:'Esperienze di vita → Present Perfect!',
+    opts:['had','was','have','did'],
+    ans:2, skill:'grammar',
+    explain:'"<strong>Have never</strong>" è il Present Perfect ✅. Struttura: have/has + participio passato. "Never" = mai (usato con Present Perfect per esperienze). Es: "I have never been to Japan." = Non sono mai stato in Giappone.' },
+
+  { cat:'grammar', type:'mc', tag:'Grammar', difficulty:'A2',
+    q:'Which is correct? "There ___ many students in the classroom."',
+    opts:['is','are','was','have'],
+    ans:1, skill:'grammar',
+    explain:'"<strong>There are</strong>" ✅ perché "students" è <strong>plurale</strong>. Regola: There IS + singolare · There ARE + plurale. Es: "There is a cat." vs "There are two cats."' },
+
+  { cat:'grammar', type:'mc', tag:'Grammar', difficulty:'A2',
+    q:'Choose the correct article: "___ apple a day keeps the doctor away."',
+    ctx:'Regola degli articoli: A vs AN',
+    opts:['A','An','The','–'],
+    ans:1, skill:'grammar',
+    explain:'"<strong>An</strong>" ✅ — si usa AN prima di un suono vocalico. "Apple" inizia con il suono /æ/ → AN apple. Regola: A + consonante (a book, a cat) · AN + vocale (an apple, an orange, an hour ← anche "hour" usa AN perché il suono inizia per /aʊ/).' },
+
+  { cat:'grammar', type:'mc', tag:'Grammar', difficulty:'B1',
+    q:'"She is ___ than her sister." (tall) — Comparativo:',
+    opts:['more tall','tallest','taller','most tall'],
+    ans:2, skill:'grammar',
+    explain:'"<strong>Taller</strong>" ✅ — Comparativo di aggettivi corti (1-2 sillabe): aggettivo + <strong>-er + than</strong>. Aggettivi lunghi: more + aggettivo + than (more beautiful than). Irregolari: good→better, bad→worse.' },
+
+  { cat:'grammar', type:'mc', tag:'Grammar', difficulty:'B1',
+    q:'Which sentence uses "should" correctly?',
+    opts:['You should to rest more.','You should resting more.','You should rest more.','You should rested more.'],
+    ans:2, skill:'grammar',
+    explain:'"<strong>You should rest</strong>" ✅ — I modal verbs (can, could, should, must, will) sono sempre seguiti dal verbo base senza "to". MAI: should to go, must to eat. ✅ should go, must eat, can swim.' },
+
+  // READING
+  { cat:'reading', type:'mc', tag:'Reading', difficulty:'A2',
+    q:'Read and answer: "Maria woke up early because she had an important meeting. She quickly had breakfast and took the bus to work. She arrived at the office at 8:30 AM."\n\nWhy did Maria wake up early?',
+    opts:['Because she was hungry.','Because she missed the bus.','Because she had an important meeting.','Because she lives far from work.'],
+    ans:2, skill:'reading',
+    explain:'La risposta è nel testo: "<em>because she had an important meeting</em>" ✅. Quando leggi, cerca sempre le parole chiave nella domanda (who, why, when, where) e trovale nel testo.' },
+
+  { cat:'reading', type:'mc', tag:'Reading', difficulty:'A2',
+    q:'Read: "Tom loves cooking Italian food. Every Sunday, he prepares a big pasta dish for his family. His children always look forward to Sunday dinners."\n\nHow often does Tom cook for his family?',
+    opts:['Every day','Every Saturday','Every Sunday','Once a month'],
+    ans:2, skill:'reading',
+    explain:'"<em>Every Sunday</em>" → ogni domenica ✅. "Look forward to" = non vedere l\'ora di. Capire il contesto ti aiuta anche con espressioni idiomatiche.' },
+
+  { cat:'reading', type:'mc', tag:'Reading', difficulty:'B1',
+    q:'Read: "Despite the rain, hundreds of people came to the outdoor concert. The organisers were surprised by the large turnout. The band played for three hours without a break."\n\nWhat surprised the organisers?',
+    opts:['The rain','The long performance','The number of people who came','The outdoor venue'],
+    ans:2, skill:'reading',
+    explain:'"<em>Surprised by the large turnout</em>" = sorpresi dall\'alta affluenza ✅. "Turnout" = numero di presenti. "Despite" = nonostante — introduce un contrasto. Parola chiave: "surprised".' },
+
+  // FILL IN BLANK
+  { cat:'fill', type:'fill', tag:'Fill in Blank', difficulty:'A2',
+    before:'She ___', answer:'doesn\'t', after:'like cold weather.',
+    hint:'doesn\'t / don\'t / isn\'t',
+    explain:'"<strong>Doesn\'t</strong>" ✅ — She = 3a persona singolare → She doesn\'t (NON "don\'t"). Regola: I/You/We/They + don\'t · He/She/It + doesn\'t · Entrambi sono seguiti dal verbo base.' },
+
+  { cat:'fill', type:'fill', tag:'Fill in Blank', difficulty:'A2',
+    before:'I ___ watching TV when she', answer:'was', after:'called me.',
+    hint:'was / were / am',
+    explain:'"<strong>Was</strong>" ✅ — Past Continuous: was/were + -ing. Con I → "was" (NON were). Struttura: I/He/She/It + was · You/We/They + were. "I was watching" = stavo guardando.' },
+
+  { cat:'fill', type:'fill', tag:'Fill in Blank', difficulty:'A2',
+    before:'There ___ a lot of people', answer:'were', after:'at the party.',
+    hint:'was / were / had',
+    explain:'"<strong>Were</strong>" ✅ — "People" è plurale in inglese (NON "peoples"). There is/was + singolare · There are/were + plurale. Passato di "are" → "were".' },
+
+  { cat:'fill', type:'fill', tag:'Fill in Blank', difficulty:'B1',
+    before:'I have lived here', answer:'since', after:'2019.',
+    hint:'since / for / from',
+    explain:'"<strong>Since</strong>" ✅ — SINCE + punto nel tempo (since 2019, since Monday, since I was born). FOR + durata (for 5 years, for a week). "I have lived here since 2019" = vivo qui dal 2019.' },
+
+  { cat:'fill', type:'fill', tag:'Fill in Blank', difficulty:'A2',
+    before:'She is ___ intelligent', answer:'more', after:'than her brother.',
+    hint:'more / most / -er',
+    explain:'"<strong>More</strong>" ✅ — "Intelligent" è una parola lunga (3+ sillabe) → usiamo MORE + aggettivo per il comparativo. Parole corte: taller, bigger, faster. Parole lunghe: more intelligent, more beautiful, more expensive.' },
+];
+
+let exFilterCat = 'all';
+let currentExIdx = 0;
+let filteredExercises = [...ALL_EXERCISES];
+
+function filterExCat(cat, btn) {
+  exFilterCat = cat;
+  document.querySelectorAll('#ex-cats .cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filteredExercises = cat === 'all' ? [...ALL_EXERCISES] : ALL_EXERCISES.filter(e => e.cat === cat);
+  currentExIdx = 0;
+  buildExercises();
+}
+
+function buildExercises() {
+  const cont = document.getElementById('ex-container');
+  cont.innerHTML = '';
+  if(filteredExercises.length === 0) { cont.innerHTML = '<div class="card" style="text-align:center;color:var(--ink3);font-style:italic;">Nessun esercizio per questa categoria.</div>'; return; }
+  // Show current exercise
+  renderSingleExercise(filteredExercises[currentExIdx], currentExIdx, cont);
+  // Nav
+  const nav = document.createElement('div');
+  nav.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-top:12px;';
+  nav.innerHTML = `
+    <button class="btn btn-outline" onclick="prevEx()" ${currentExIdx === 0 ? 'disabled' : ''}>← Prev</button>
+    <span style="font-family:'Syne',sans-serif;font-size:0.78rem;color:var(--ink3);">${currentExIdx+1} / ${filteredExercises.length}</span>
+    <button class="btn btn-dark" onclick="nextEx()">Next →</button>
+  `;
+  cont.appendChild(nav);
+}
+
+function prevEx() {
+  if(currentExIdx > 0) { currentExIdx--; buildExercises(); }
+}
+
+function nextEx() {
+  if(currentExIdx < filteredExercises.length - 1) { currentExIdx++; buildExercises(); }
+  else { currentExIdx = 0; buildExercises(); showNotif('🔄 Ricominciato dall\'inizio!'); }
+}
+
+function renderSingleExercise(ex, idx, container) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  const tagClass = {vocab:'tag-v',grammar:'tag-g',reading:'tag-r',fill:'tag-l'}[ex.cat] || 'tag-v';
+  let html = `<span class="ex-tag ${tagClass}">${ex.tag}</span>
+    <div style="font-family:'Syne',sans-serif;font-size:0.65rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">Difficoltà: ${ex.difficulty}</div>`;
+
+  if(ex.type === 'mc' || !ex.type) {
+    if(ex.ctx) html += `<div class="ex-context">${ex.ctx}</div>`;
+    html += `<div class="ex-q">${ex.q.replace(/\n/g,'<br>')}</div>`;
+    html += `<div class="opts" id="opts-${idx}"></div>`;
+    html += `<div class="feedback" id="fb-${idx}"></div>`;
+  } else if(ex.type === 'fill') {
+    html += `<div class="ex-q">Completa la frase:</div>`;
+    html += `<div class="fill-sentence">${ex.before} <input class="fill-inp" id="fi-${idx}" placeholder="${ex.hint}" autocomplete="off"> ${ex.after}</div>`;
+    html += `<div class="feedback" id="fb-${idx}"></div>`;
+    html += `<div class="btn-row"><button class="btn btn-dark" onclick="checkFillEx(${idx})">Controlla ✓</button><button class="btn btn-outline" onclick="nextEx()">Salta →</button></div>`;
+  }
+
+  card.innerHTML = html;
+
+  if(ex.type === 'mc' || !ex.type) {
+    const opts = card.querySelector(`#opts-${idx}`);
+    ex.opts.forEach((o, i) => {
+      const b = document.createElement('button');
+      b.className = 'opt-btn';
+      b.textContent = o;
+      b.onclick = () => {
+        card.querySelectorAll('.opt-btn').forEach(x => x.disabled = true);
+        const correct = i === ex.ans;
+        b.classList.add(correct ? 'correct' : 'wrong');
+        if(!correct) card.querySelectorAll('.opt-btn')[ex.ans]?.classList.add('correct');
+        const fb = card.querySelector(`#fb-${idx}`);
+        fb.className = 'feedback show ' + (correct ? 'ok' : 'no');
+        fb.innerHTML = (correct ? '✅ <strong>Correct!</strong><br>' : '❌ <strong>Risposta sbagliata.</strong><br>') + ex.explain;
+        // gravity: reading è più grave (0.8), vocab meno (0.4), grammar medio (0.6)
+        const gravity = { vocab: 0.4, grammar: 0.6, reading: 0.8, fill: 0.5 }[ex.cat] ?? 0.5;
+        addXP(0, ex.skill, correct, { difficulty: ex.difficulty, gravity });
+        setTimeout(() => nextEx(), correct ? 2200 : 3500);
+      };
+      opts.appendChild(b);
+    });
+  }
+
+  container.appendChild(card);
+}
+
+function checkFillEx(idx) {
+  const ex = filteredExercises.find((e,i) => {
+    // find the current exercise
+    return i === currentExIdx;
+  });
+  if(!ex) return;
+  const inp = document.getElementById(`fi-${idx}`);
+  if(!inp) return;
+  const val = inp.value.trim().toLowerCase().replace(/'/g,"'");
+  const ans = ex.answer.toLowerCase().replace(/'/g,"'");
+  const correct = val === ans || val === ans.replace(/'/g,"'");
+  inp.className = 'fill-inp ' + (correct ? 'ok' : 'no');
+  inp.disabled = true;
+  const fb = document.getElementById(`fb-${idx}`);
+  fb.className = 'feedback show ' + (correct ? 'ok' : 'no');
+  fb.innerHTML = (correct ? `✅ <strong>Correct! "${ex.answer}"</strong><br>` : `❌ La risposta corretta era: <strong>"${ex.answer}"</strong><br>`) + ex.explain;
+  addXP(0, ex.skill || 'fill', correct, { difficulty: ex.difficulty || 'A2', gravity: 0.5 });
+  setTimeout(() => nextEx(), correct ? 2000 : 3500);
+}
+
+// Quick exercise on home
+let quickIdx = 0;
+function buildQuickExercise() {
+  const card = document.getElementById('quick-card');
+  const exList = ALL_EXERCISES.filter(e => e.cat !== 'fill' && e.difficulty === 'A2');
+  const ex = exList[quickIdx % exList.length];
+  quickIdx++;
+
+  const tagClass = {vocab:'tag-v',grammar:'tag-g',reading:'tag-r'}[ex.cat] || 'tag-v';
+  let html = `<span class="ex-tag ${tagClass}">${ex.tag}</span>`;
+  if(ex.ctx) html += `<div class="ex-context">${ex.ctx}</div>`;
+  html += `<div class="ex-q">${ex.q}</div><div class="opts" id="home-opts"></div><div class="feedback" id="home-fb"></div>`;
+  card.innerHTML = html;
+
+  const opts = card.querySelector('#home-opts');
+  ex.opts.forEach((o, i) => {
+    const b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.textContent = o;
+    b.onclick = () => {
+      opts.querySelectorAll('.opt-btn').forEach(x => x.disabled = true);
+      const correct = i === ex.ans;
+      b.classList.add(correct ? 'correct' : 'wrong');
+      if(!correct) opts.querySelectorAll('.opt-btn')[ex.ans]?.classList.add('correct');
+      const fb = card.querySelector('#home-fb');
+      fb.className = 'feedback show ' + (correct ? 'ok' : 'no');
+      fb.innerHTML = (correct ? '✅ <strong>Correct!</strong><br>' : '❌ <strong>Sbagliato.</strong><br>') + ex.explain;
+      const gravity = { vocab: 0.4, grammar: 0.6, reading: 0.8 }[ex.cat] ?? 0.5;
+      addXP(0, ex.skill, correct, { difficulty: ex.difficulty || 'A2', gravity });
+      if(correct) {
+        const nbtn = document.createElement('button');
+        nbtn.className = 'btn btn-dark';
+        nbtn.textContent = 'Prossimo →';
+        nbtn.style.marginTop = '12px';
+        nbtn.onclick = () => buildQuickExercise();
+        card.appendChild(nbtn);
+      }
+    };
+    opts.appendChild(b);
+  });
+}
+
+// ============================================================
+// DIALOGUES
+// ============================================================
+const DIALOGUES = [
+  {title:'At the café ☕',turns:[
+    {w:'A',t:"Hi there! What can I get for you?"},
+    {w:'B',t:"I'd like a large coffee and a croissant, please."},
+    {w:'A',t:"Of course. Would you like milk or sugar in your coffee?"},
+    {w:'B',t:"Just a little milk, please. No sugar."},
+    {w:'A',t:"Great. Anything else? We have fresh orange juice today."},
+    {w:'B',t:"Actually, yes! A small orange juice as well."},
+    {w:'A',t:"That'll be €5.50. Cash or card?"},
+    {w:'B',t:"Card, please. Here you go."},
+    {w:'A',t:"Thank you! Your order will be ready in a moment."},
+  ]},
+  {title:'Asking for directions 🗺️',turns:[
+    {w:'A',t:"Excuse me, I'm looking for the central train station. Am I going the right way?"},
+    {w:'B',t:"Not quite! You need to turn around and go back to the main road."},
+    {w:'A',t:"Oh, I see. And then what?"},
+    {w:'B',t:"Then turn left at the traffic lights and keep walking straight for about 10 minutes."},
+    {w:'A',t:"Is there a bus I can take?"},
+    {w:'B',t:"Yes, the number 14 bus stops just around the corner."},
+    {w:'A',t:"That's very helpful. Thank you so much!"},
+    {w:'B',t:"No problem at all. Have a safe journey!"},
+  ]},
+  {title:'Doctor\'s appointment 🏥',turns:[
+    {w:'A',t:"Good morning. I have an appointment at 10 o'clock. My name is Rossi."},
+    {w:'B',t:"Good morning, Mr Rossi. Please take a seat. The doctor will be with you shortly."},
+    {w:'A',t:"Thank you. I've been feeling unwell since yesterday."},
+    {w:'B',t:"Can you describe your symptoms?"},
+    {w:'A',t:"I have a sore throat, a headache and I feel very tired."},
+    {w:'B',t:"Do you have a fever?"},
+    {w:'A',t:"Yes, about 38 degrees."},
+    {w:'B',t:"I see. Let me check your blood pressure and temperature first."},
+  ]},
+  {title:'Job interview 💼',turns:[
+    {w:'A',t:"Good afternoon. Please come in and have a seat."},
+    {w:'B',t:"Thank you. I'm very pleased to be here."},
+    {w:'A',t:"Can you tell me a little about yourself and your experience?"},
+    {w:'B',t:"Of course. I have three years of experience in customer service. I enjoy working with people and solving problems."},
+    {w:'A',t:"What are your main strengths?"},
+    {w:'B',t:"I'm reliable, I learn quickly, and I always meet deadlines."},
+    {w:'A',t:"And what are your goals for the next few years?"},
+    {w:'B',t:"I'd like to develop my skills in management and eventually lead a team."},
+  ]},
+  {title:'At the hotel 🏨',turns:[
+    {w:'A',t:"Welcome! Do you have a reservation?"},
+    {w:'B',t:"Yes, I booked a double room for three nights. The name is Ferrari."},
+    {w:'A',t:"Let me check… Yes, here it is. Room 204 on the second floor."},
+    {w:'B',t:"Wonderful. Is breakfast included?"},
+    {w:'A',t:"Yes, breakfast is served from 7 to 10:30 in the restaurant on the ground floor."},
+    {w:'B',t:"Is there a car park nearby?"},
+    {w:'A',t:"Yes, we have an underground car park. It costs €10 per night."},
+    {w:'B',t:"Perfect. What time is check-out?"},
+    {w:'A',t:"Check-out is at noon. Enjoy your stay!"},
+  ]},
+  {title:'Making plans with a friend 📅',turns:[
+    {w:'A',t:"Hey! Are you doing anything this weekend?"},
+    {w:'B',t:"I'm not sure yet. Why, what did you have in mind?"},
+    {w:'A',t:"There's a new exhibition at the art gallery. Would you like to go?"},
+    {w:'B',t:"That sounds great! When is it?"},
+    {w:'A',t:"It's open on Saturday from 10 to 6. We could go in the afternoon."},
+    {w:'B',t:"Saturday afternoon works for me. Shall we meet at 2?"},
+    {w:'A',t:"Perfect. We could grab something to eat afterwards as well."},
+    {w:'B',t:"I'd love that! See you Saturday at 2 then."},
+  ]},
+];
+
+let dialIdx2 = 0;
+function buildDialogues() {
+  renderDialogue2();
+}
+
+function renderDialogue2() {
+  const cont = document.getElementById('dial-container');
+  const d = DIALOGUES[dialIdx2];
+  let html = `<div class="card">
+    <div class="dial-scene">📍 ${d.title}</div>
+    <div>`;
+  d.turns.forEach(t => {
+    html += `<div class="bubble-wrap clearfix">
+      <div class="bubble-lbl">${t.w === 'A' ? '🧑 Person A' : '👤 Person B'}</div>
+      <div class="bubble ${t.w === 'A' ? 'bubble-a' : 'bubble-b'}">${t.t}</div>
+    </div>`;
+  });
+  html += `</div>
+    <div style="margin-top:16px;padding:12px 14px;background:var(--gold-bg);border-radius:var(--radius-sm);font-size:0.82rem;">
+      💡 <strong>Leggi ad alta voce!</strong> Poi prova a recitare una delle due parti.
+      <button onclick="readDial()" style="border:none;background:none;color:var(--blue);cursor:pointer;font-weight:700;font-family:'Syne',sans-serif;font-size:0.78rem;margin-left:8px;">▶ Ascolta tutto</button>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:8px;">
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline btn-sm" onclick="prevDial()">← Prev</button>
+        <button class="btn btn-dark btn-sm" onclick="nextDial()">Next →</button>
+      </div>
+      <span style="font-family:'Syne',sans-serif;font-size:0.72rem;color:var(--ink3);">${dialIdx2+1} / ${DIALOGUES.length}</span>
+    </div>
+  </div>`;
+  cont.innerHTML = html;
+}
+
+function nextDial() { dialIdx2 = (dialIdx2 + 1) % DIALOGUES.length; renderDialogue2(); addXP(3, 'speaking', true); }
+function prevDial() { dialIdx2 = (dialIdx2 - 1 + DIALOGUES.length) % DIALOGUES.length; renderDialogue2(); }
+function readDial() {
+  if('speechSynthesis' in window) {
+    speechSynthesis.cancel();
+    DIALOGUES[dialIdx2].turns.forEach(t => {
+      const u = new SpeechSynthesisUtterance(t.t);
+      u.lang = 'en-US'; u.rate = 0.8; speechSynthesis.speak(u);
+    });
+    addXP(5, 'speaking', true);
+  }
+}
+
+// ============================================================
+// PROGRESS
+// ============================================================
+function buildProgress() {
+  if(!CP) return;
+  // Weekly chart
+  const wc = document.getElementById('wchart');
+  wc.innerHTML = '';
+  const max = Math.max(...CP.weeklyXP, 10);
+  const today = new Date().getDay();
+  const todayIdx = today === 0 ? 6 : today - 1;
+  CP.weeklyXP.forEach((v, i) => {
+    const bar = document.createElement('div');
+    bar.className = 'wc-bar' + (i === todayIdx ? ' today' : '');
+    bar.style.height = Math.max(3, (v / max) * 70) + 'px';
+    bar.title = v + ' XP';
+    wc.appendChild(bar);
+  });
+  // Goals
+  const gw = document.getElementById('goals-wrap');
+  const acc = CP.exDone > 0 ? Math.round((CP.exCorrect / CP.exDone) * 100) : 0;
+  const goals = [
+    {icon:'📚',title:'Studia 20 parole',sub:`${CP.wordsStudied}/20`,p:Math.min(100,(CP.wordsStudied/20)*100)},
+    {icon:'✅',title:'Completa 10 esercizi',sub:`${CP.exDone}/10`,p:Math.min(100,(CP.exDone/10)*100)},
+    {icon:'🌟',title:'Raggiungi 200 XP',sub:`${CP.xp}/200`,p:Math.min(100,(CP.xp/200)*100)},
+    {icon:'🎯',title:'Accuratezza 70%',sub:`${acc}%`,p:Math.min(100,(acc/70)*100)},
+    {icon:'🔥',title:'Streak 7 giorni',sub:`${CP.streak}/7`,p:Math.min(100,(CP.streak/7)*100)},
+  ];
+  gw.innerHTML = '';
+  goals.forEach(g => {
+    const d = document.createElement('div');
+    d.className = 'goal-item';
+    d.innerHTML = `<span class="goal-icon">${g.icon}</span>
+      <div class="goal-info">
+        <div class="goal-title">${g.title}</div>
+        <div class="prog-track" style="margin-top:4px;height:5px;"><div class="prog-fill" style="width:${g.p}%;background:var(--gold)"></div></div>
+      </div>
+      <span class="goal-pct">${g.sub}</span>`;
+    gw.appendChild(d);
+  });
+  // Skills
+  const sw = document.getElementById('skills-wrap');
+  const sl = {vocab:'📖 Vocabolario',grammar:'✏️ Grammatica',reading:'📄 Reading',speaking:'🗣️ Speaking'};
+  const sc = {vocab:'var(--gold)',grammar:'var(--blue)',reading:'var(--red)',speaking:'var(--green-light)'};
+  sw.innerHTML = '';
+  Object.entries(CP.skills).forEach(([k,v]) => {
+    const d = document.createElement('div');
+    d.className = 'prog-skill';
+    d.innerHTML = `<div class="prog-skill-row"><span class="prog-skill-name">${sl[k]}</span><span class="prog-skill-pct">${v}%</span></div>
+      <div class="prog-track"><div class="prog-fill" style="width:${v}%;background:${sc[k]}"></div></div>`;
+    sw.appendChild(d);
+  });
+}
+
+// ============================================================
+// KEYBOARD SHORTCUTS
+// ============================================================
+document.addEventListener('keydown', e => {
+  if(e.key === 'Enter' && document.getElementById('auth-screen').classList.contains('active')) {
+    const loginForm = document.getElementById('login-form');
+    if(!loginForm.classList.contains('hidden')) doLogin();
+    else doRegister();
+  }
+});
+
+// ============================================================
+// PRETEST — 6 questions spanning A1 → B1
+// ============================================================
+const PRETEST_Q = [
+  {
+    level: 'A1', q: 'What is the correct translation of "Buongiorno"?',
+    opts: ['Good night','Good morning','Good evening','Goodbye'],
+    ans: 1, pts: 1,
+    fb: '"Good morning" = Buongiorno ✅. Basic greetings are A1 level!'
+  },
+  {
+    level: 'A1→A2', q: 'Choose the correct sentence:',
+    ctx: 'Present Simple — 3rd person singular',
+    opts: ['She have a dog.','She has a dog.','She having a dog.','She is have a dog.'],
+    ans: 1, pts: 1,
+    fb: '"She has" ✅ — with he/she/it we use HAS (not have). This is A1/A2 grammar.'
+  },
+  {
+    level: 'A2', q: '"Yesterday I ___ to the cinema." Complete:',
+    opts: ['go','goes','went','was going'],
+    ans: 2, pts: 2,
+    fb: '"Went" ✅ — Past Simple of "go" (irregular verb). A2 level: basic past tense.'
+  },
+  {
+    level: 'A2+', q: 'Which sentence is correct?',
+    ctx: 'Present Perfect vs Past Simple',
+    opts: ['I have seen him yesterday.','I saw him yesterday.','I did see him yesterday.','I have saw him yesterday.'],
+    ans: 1, pts: 2,
+    fb: '"I saw him yesterday" ✅ — "Yesterday" is a specific past time → Past Simple. Present Perfect is NEVER used with specific past time words like yesterday, last year, in 2020.'
+  },
+  {
+    level: 'B1', q: '"Despite ___ tired, she finished the report." Complete:',
+    opts: ['be','been','being','to be'],
+    ans: 2, pts: 3,
+    fb: '"Being" ✅ — After prepositions (despite, without, after, before) we use the -ing form. "Despite being tired" = Nonostante fosse stanca. This is B1 grammar!'
+  },
+  {
+    level: 'B1+', q: 'Choose the most natural way to express a polite request:',
+    opts: ['Give me the menu.','I want the menu.','Could I have the menu, please?','I am wanting the menu.'],
+    ans: 2, pts: 3,
+    fb: '"Could I have...?" ✅ — Using "could" makes requests polite and natural. "I want" is grammatically correct but sounds direct/rude in English. B1 functional language.'
+  },
+];
+
+let ptAnswers = []; // store: {pts, correct}
+let ptCurrent = 0;
+
+function showPretest() {
+  document.getElementById('auth-screen').classList.remove('active');
+  document.getElementById('pretest-screen').classList.add('active');
+  ptAnswers = [];
+  ptCurrent = 0;
+  renderPretestIntro();
+}
+
+function renderPretestIntro() {
+  document.getElementById('pretest-box').innerHTML = `
+    <div class="pretest-intro">
+      <div class="pt-emoji">🧭</div>
+      <h2>Test di livello iniziale</h2>
+      <p>Prima di iniziare, rispondi a <strong>6 domande rapide</strong> per capire il tuo livello attuale.<br>
+      Non preoccuparti degli errori — serve solo a personalizzare il tuo percorso!</p>
+      <button class="btn-auth" onclick="renderPretestQ(0)">Inizia il test →</button>
+    </div>
+  `;
+}
+
+function renderPretestQ(idx) {
+  if(idx >= PRETEST_Q.length) { renderPretestResult(); return; }
+  const q = PRETEST_Q[idx];
+  const pct = (idx / PRETEST_Q.length) * 100;
+  document.getElementById('pretest-box').innerHTML = `
+    <div class="pt-progress-row">
+      <span class="pt-step-label">Domanda ${idx+1}/${PRETEST_Q.length}</span>
+      <div class="pt-track"><div class="pt-fill" id="pt-fill" style="width:${pct}%"></div></div>
+      <span class="pt-step-label" style="color:var(--ink3)">${q.level}</span>
+    </div>
+    <div class="pt-q">${q.q}</div>
+    ${q.ctx ? `<div class="pt-ctx">${q.ctx}</div>` : ''}
+    <div class="pt-opts" id="pt-opts"></div>
+    <div class="pt-fb" id="pt-fb"></div>
+  `;
+  const opts = document.getElementById('pt-opts');
+  q.opts.forEach((o, i) => {
+    const b = document.createElement('button');
+    b.className = 'pt-opt';
+    b.textContent = o;
+    b.onclick = () => {
+      opts.querySelectorAll('.pt-opt').forEach(x => x.disabled = true);
+      const correct = i === q.ans;
+      b.classList.add(correct ? 'correct' : 'wrong');
+      if(!correct) opts.querySelectorAll('.pt-opt')[q.ans].classList.add('correct');
+      ptAnswers.push({ pts: correct ? q.pts : 0, correct });
+      const fb = document.getElementById('pt-fb');
+      fb.className = 'pt-fb show ' + (correct ? 'ok' : 'no');
+      fb.innerHTML = (correct ? '✅ ' : '❌ ') + q.fb;
+      setTimeout(() => renderPretestQ(idx + 1), 1800);
+    };
+    opts.appendChild(b);
+  });
+}
+
+function renderPretestResult() {
+  const total = ptAnswers.reduce((s, a) => s + a.pts, 0);
+  const maxPts = PRETEST_Q.reduce((s, q) => s + q.pts, 0); // 12
+  const pct = total / maxPts;
+
+  let level, levelIdx, desc;
+  if(pct < 0.25)       { level = 'A1';  levelIdx = 0; desc = 'Sei alle prime armi! Inizieremo dalle basi più semplici: saluti, vocabolario di base e frasi quotidiane.' }
+  else if(pct < 0.45)  { level = 'A2';  levelIdx = 0; desc = 'Hai una base elementare. Conosci i concetti fondamentali ma hai ancora molto da imparare. Partiamo da A2!' }
+  else if(pct < 0.65)  { level = 'A2+'; levelIdx = 1; desc = 'Ottimo! Hai superato il livello base. Iniziamo da A2+ con grammatica intermedia e vocabolario più ricco.' }
+  else if(pct < 0.82)  { level = 'A2++';levelIdx = 2; desc = 'Molto bene! Hai una buona base. Partiamo direttamente da A2++ verso B1.' }
+  else                 { level = 'B1';  levelIdx = 3; desc = 'Impressionante! Il tuo livello è già B1. Inizieremo da lì per consolidare e crescere verso B2.' }
+
+  // Store result for use after registration
+  window._pretestLevelIdx = levelIdx;
+  window._pretestLevel = level;
+
+  const correct = ptAnswers.filter(a => a.correct).length;
+  document.getElementById('pretest-box').innerHTML = `
+    <div class="pt-result">
+      <div style="font-family:'Syne',sans-serif;font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink3);margin-bottom:12px;">📊 Risultato del test</div>
+      <div class="pt-score-big">${correct}/${PRETEST_Q.length}</div>
+      <div class="pt-level-assigned">Livello assegnato: <span style="color:var(--gold)">${level}</span></div>
+      <div class="pt-desc">${desc}</div>
+      <div style="background:var(--gold-bg);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:20px;font-size:0.85rem;line-height:1.6;">
+        🎯 Il tuo percorso è personalizzato per il livello <strong>${level}</strong>.<br>
+        Potrai sempre avanzare completando gli esercizi e superando l'esame finale!
+      </div>
+      <button class="btn-auth" onclick="goToRegisterFromPretest()">Crea il tuo profilo →</button>
+      <div style="margin-top:12px;text-align:center;">
+        <button onclick="skipPretest()" style="border:none;background:none;color:var(--ink3);font-size:0.8rem;cursor:pointer;text-decoration:underline;">Hai già un account? Accedi</button>
+      </div>
+    </div>
+  `;
+}
+
+function goToRegisterFromPretest() {
+  document.getElementById('pretest-screen').classList.remove('active');
+  document.getElementById('auth-screen').classList.add('active');
+  switchAuthTab('register');
+}
+
+function skipPretest() {
+  document.getElementById('pretest-screen').classList.remove('active');
+  document.getElementById('auth-screen').classList.add('active');
+  switchAuthTab('login');
+}
+
+// Override doRegister to inject pretest level
+const _origDoRegister = doRegister;
+async function doRegister() {
+  const first = document.getElementById('reg-first').value.trim();
+  const last = document.getElementById('reg-last').value.trim();
+  const user = document.getElementById('reg-user').value.trim().toLowerCase().replace(/\s+/g,'.');
+  const pass = document.getElementById('reg-pass').value;
+  const pass2 = document.getElementById('reg-pass2').value;
+  const msg = document.getElementById('register-msg');
+
+  if(!first||!last||!user||!pass) { showMsg(msg,'error','Compila tutti i campi!'); return; }
+  if(pass.length < 4) { showMsg(msg,'error','La password deve avere almeno 4 caratteri.'); return; }
+  if(pass !== pass2) { showMsg(msg,'error','Le password non corrispondono.'); return; }
+
+  let users = {};
+  try { users = await loadUsers(); } catch(e) {}
+  if(users[user]) { showMsg(msg,'error','Username già in uso. Scegli un altro.'); return; }
+
+  const ph = btoa(pass + user + 'ej_salt_2024');
+  users[user] = { first, last, ph };
+  await saveUsers(users);
+
+  // Apply pretest level if available
+  const prof = defaultProfile(first, last, user);
+  const pretestLvlIdx = window._pretestLevelIdx || 0;
+  if(pretestLvlIdx > 0) {
+    prof.xp = LEVELS[pretestLvlIdx].xp;
+    prof.pretestLevel = LEVELS[pretestLvlIdx].name;
+  }
+  await saveProfile(user, prof);
+  showMsg(msg,'success', pretestLvlIdx > 0
+    ? `✅ Profilo creato al livello ${LEVELS[pretestLvlIdx].name}! Ora accedi.`
+    : '✅ Profilo creato! Ora accedi.');
+  setTimeout(() => switchAuthTab('login'), 1500);
+}
+
+// Hook: show pretest on first visit to register tab
+let _pretestShown = false;
+const _origSwitchAuthTab = switchAuthTab;
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((b,i) => b.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='register')));
+  document.getElementById('login-form').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('register-form').classList.toggle('hidden', tab !== 'register');
+  // If switching to register for the first time, show pretest
+  if(tab === 'register' && !_pretestShown) {
+    _pretestShown = true;
+    setTimeout(() => {
+      document.getElementById('auth-screen').classList.remove('active');
+      document.getElementById('pretest-screen').classList.add('active');
+      ptAnswers = []; ptCurrent = 0;
+      renderPretestIntro();
+    }, 100);
+  }
+}
+
+// ============================================================
+// WEIGHTED PENALTY SYSTEM
+// Penalità graduate su 4 dimensioni:
+//   1. Tipo esercizio  (reading > grammar > vocab > fill)
+//   2. Difficoltà      (B1 > A2+ > A2)
+//   3. Errori di fila  (streak sbagliata moltiplica)
+//   4. Gravità errore  (parametro opzionale 0-1 passato dal chiamante)
+// ============================================================
+
+// Base XP per risposta corretta
+const XP_TABLE = {
+  vocab:   { A2: 8,  'A2+': 10, B1: 12 },
+  grammar: { A2: 10, 'A2+': 13, B1: 16 },
+  reading: { A2: 12, 'A2+': 15, B1: 18 },
+  fill:    { A2: 9,  'A2+': 11, B1: 14 },
+  speaking:{ A2: 5,  'A2+': 6,  B1: 7  },
+};
+
+// Base penalità per risposta sbagliata
+const PENALTY_TABLE = {
+  vocab:   { A2: -3,  'A2+': -4,  B1: -6  },
+  grammar: { A2: -5,  'A2+': -7,  B1: -10 },
+  reading: { A2: -4,  'A2+': -6,  B1: -9  },
+  fill:    { A2: -3,  'A2+': -4,  B1: -7  },
+  speaking:{ A2: 0,   'A2+': 0,   B1: 0   }, // speaking non penalizzato
+};
+
+// Moltiplicatori per errori consecutivi (streak sbagliata)
+// 1°errore: 1.0x  |  2°: 1.0x  |  3°: 1.3x  |  4°: 1.6x  |  5°+: 2.0x
+const STREAK_MULT = [1.0, 1.0, 1.3, 1.6, 2.0];
+
+// Stato errori consecutivi (reset ad ogni risposta corretta)
+if(!window._wrongStreak) window._wrongStreak = 0;
+
+/**
+ * calcPenalty(skill, difficulty, gravity)
+ *   skill      — 'vocab' | 'grammar' | 'reading' | 'fill' | 'speaking'
+ *   difficulty — 'A2' | 'A2+' | 'B1'
+ *   gravity    — 0.0 (lieve) → 1.0 (gravissimo) [opzionale, default 0.5]
+ * Restituisce un numero negativo (es. -8)
+ */
+function calcPenalty(skill, difficulty, gravity = 0.5) {
+  const sk = skill || 'grammar';
+  const diff = difficulty || 'A2';
+  const basePen = (PENALTY_TABLE[sk] && PENALTY_TABLE[sk][diff]) ?? -5;
+  if(basePen === 0) return 0; // skill esente (es. speaking)
+
+  // Streak moltiplicatore
+  const streakIdx = Math.min(window._wrongStreak, STREAK_MULT.length - 1);
+  const streakMult = STREAK_MULT[streakIdx];
+
+  // Gravity factor: da 0.6x (lieve) a 1.4x (massimo)
+  const gravityMult = 0.6 + gravity * 0.8;
+
+  const raw = Math.round(basePen * streakMult * gravityMult);
+  return Math.max(raw, -25); // cap a -25 per non essere punitivi oltre misura
+}
+
+/**
+ * calcXP(skill, difficulty)
+ * Restituisce XP positivi per risposta corretta.
+ * Bonus +3 se si stava in una streak negativa (recovery bonus).
+ */
+function calcXP(skill, difficulty) {
+  const sk = skill || 'grammar';
+  const diff = difficulty || 'A2';
+  const base = (XP_TABLE[sk] && XP_TABLE[sk][diff]) ?? 10;
+  const recoveryBonus = window._wrongStreak >= 3 ? 3 : 0; // stavi sbagliando, ora ci sei!
+  return base + recoveryBonus;
+}
+
+/**
+ * addXP(xpDelta, skill, correct, opts)
+ *   xpDelta — se passato direttamente (es. da dialogo), lo usa tal quale
+ *   opts    — { difficulty, gravity } per il calcolo ponderato
+ */
+async function addXP(xpDelta, skill, correct, opts = {}) {
+  if(!CP) return;
+
+  let finalDelta = xpDelta;
+
+  // Se è un esercizio (correct boolean definito), ricalcola con sistema ponderato
+  if(typeof correct === 'boolean') {
+    const diff = opts.difficulty || 'A2';
+    const gravity = opts.gravity ?? 0.5;
+    if(correct) {
+      finalDelta = calcXP(skill, diff);
+      window._wrongStreak = 0; // reset streak errori
+    } else {
+      finalDelta = calcPenalty(skill, diff, gravity);
+      window._wrongStreak = (window._wrongStreak || 0) + 1;
+    }
+  }
+
+  const before = CP.xp;
+  CP.xp = Math.max(0, CP.xp + finalDelta);
+  CP.exDone++;
+  if(correct) CP.exCorrect++;
+
+  // Weekly tracking (solo XP positivi)
+  const d = new Date().getDay();
+  const dayIdx = d === 0 ? 6 : d - 1;
+  if(finalDelta > 0) CP.weeklyXP[dayIdx] = (CP.weeklyXP[dayIdx] || 0) + finalDelta;
+
+  // Skill update ponderato
+  if(skill && CP.skills[skill] !== undefined) {
+    const skillDelta = correct ? 4 : Math.max(-3, Math.round(finalDelta / 3));
+    CP.skills[skill] = Math.max(0, Math.min(100, CP.skills[skill] + skillDelta));
+  }
+
+  await saveProfile(CP.username, CP);
+  updateHUD();
+  checkExamReady();
+
+  // Notifica con indicatore streak
+  if(finalDelta > 0 && correct) {
+    const recovery = opts.gravity !== undefined && window._wrongStreak === 0 && before < CP.xp;
+    showNotif(`+${finalDelta} XP 🌟 Correct!`);
+  } else if(finalDelta < 0) {
+    const streakWarn = window._wrongStreak >= 3
+      ? ` ⚠️ ${window._wrongStreak} errori di fila!`
+      : '';
+    showNotif(`${finalDelta} XP ❌${streakWarn}`);
+    const xpBar = document.querySelector('.xp-bar-wrap');
+    if(xpBar) { xpBar.classList.add('penalty-flash'); setTimeout(() => xpBar.classList.remove('penalty-flash'), 700); }
+  }
+}
+
+// ============================================================
+// EXAM READINESS CHECK
+// ============================================================
+function checkExamReady() {
+  if(!CP) return;
+  const lvlIdx = getLevel(CP.xp);
+  const nextLevel = LEVELS[lvlIdx + 1];
+  if(!nextLevel) return; // already max
+  const cur = LEVELS[lvlIdx];
+  const range = nextLevel.xp - cur.xp;
+  const progress = CP.xp - cur.xp;
+  const card = document.getElementById('exam-ready-card');
+  if(!card) return;
+  // Show exam card when at 95%+ of current level XP range
+  if(progress >= range * 0.95) {
+    card.classList.add('visible');
+    card.querySelector('.ert-sub').textContent =
+      `Hai quasi raggiunto il massimo del livello ${cur.name}. Supera l'esame per avanzare a ${nextLevel.name}!`;
+  } else {
+    card.classList.remove('visible');
+  }
+}
+
+// ============================================================
+// FINAL EXAM
+// ============================================================
+const FINAL_EXAMS = {
+  'A2': [
+    { q:'Complete: "She ___ go to school every day."', opts:["don't","doesn't","isn't","hasn't"], ans:1, explain:'With she/he/it → "doesn\'t". The main verb stays in base form.' },
+    { q:'Which sentence is in the Past Simple?', opts:["She is eating","She was eating","She ate","She has eaten"], ans:2, explain:'"She ate" = Simple Past ✅. Ate is the irregular past of "eat".' },
+    { q:'Choose: "There ___ many students here."', opts:["is","are","was","be"], ans:1, explain:'"Students" is plural → "There are". There is + singular, There are + plural.' },
+    { q:'What does "exhausted" mean?', opts:["Affamato","Confuso","Esausto","Eccitato"], ans:2, explain:'"Exhausted" = esausto, stanchissimo. From "to exhaust" = to use up all energy.' },
+    { q:'"___ you like some coffee?" — Choose the correct form:', opts:["Do","Would","Are","Have"], ans:1, explain:'"Would you like...?" is the polite way to offer something. Much more natural than "Do you want?"' },
+    { q:'Translate: "Vado al lavoro ogni giorno."', opts:["I am going to work every day.","I go to work every day.","I went to work every day.","I have gone to work every day."], ans:1, explain:'"I go to work every day" ✅ — habitual action → Present Simple.' },
+  ],
+  'A2+': [
+    { q:'"I ___ here for 5 years." — Which tense?', opts:["lived","am living","have lived","was living"], ans:2, explain:'"Have lived" = Present Perfect ✅. Duration from past to now → for/since + Present Perfect.' },
+    { q:'Choose the correct comparative:', opts:["She is more tall than me.","She is taller than me.","She is tallest than me.","She is tall more than me."], ans:1, explain:'"Taller than" ✅ — short adjectives (1-2 syllables) add -er. Long adjectives use "more".' },
+    { q:'Which is a correct conditional sentence?', opts:["If it will rain, I stay home.","If it rains, I will stay home.","If it rains, I would stay home.","If it rained, I will stay home."], ans:1, explain:'"If it rains, I will stay home" = First Conditional ✅ (real/possible future): If + present, will + base.' },
+    { q:'What does "eventually" mean in English?', opts:["Eventualmente","Infine/Alla fine","Forse","Di solito"], ans:1, explain:'"Eventually" = INFINE (FALSE FRIEND! ⚠️). NON significa "eventualmente" (= possibly/maybe). Es: "Eventually he arrived" = Alla fine è arrivato.' },
+    { q:'"She suggested ___ to the cinema." Complete:', opts:["to go","go","going","gone"], ans:2, explain:'"Suggest + -ing" ✅ — Some verbs are always followed by -ing: suggest, avoid, enjoy, finish, mind.' },
+    { q:'Which sentence uses the Present Perfect correctly?', opts:["I have seen him yesterday.","Did you ever try sushi?","She has just arrived.","They have left the party last night."], ans:2, explain:'"She has just arrived" ✅. "Just" + Present Perfect = action that happened very recently.' },
+  ],
+  'A2++': [
+    { q:'"By the time she arrived, we ___ waiting for 2 hours." Complete:', opts:["had been","have been","were","was"], ans:0, explain:'"Had been waiting" = Past Perfect Continuous ✅ — action ongoing before another past event. B1 grammar!' },
+    { q:'Choose the correct passive voice:', opts:["The cake was ate by Tom.","The cake was eaten by Tom.","The cake has ate by Tom.","The cake eaten by Tom."], ans:1, explain:'"Was eaten" ✅ — Passive: was/were + past participle. "Eaten" is the past participle of "eat".' },
+    { q:'"I wish I ___ more time." — Complete:', opts:["have","had","will have","am having"], ans:1, explain:'"I wish I had" ✅ — "Wish" + past simple expresses a wish about the present. It\'s an unreal/imaginary situation.' },
+    { q:'Which phrasal verb means "to tolerate"?', opts:["put off","put out","put up with","put away"], ans:2, explain:'"Put up with" = tollerare/sopportare ✅. Es: "I can\'t put up with this noise!" Phrasal verbs are key for B1+.' },
+    { q:'Choose the correct reported speech:', opts:[`He said "I am tired" → He said that he was tired.`,`He said "I am tired" → He said that he is tired.`,`He said "I am tired" → He told that he was tired.`,`He said "I am tired" → He said that he were tired.`], ans:0, explain:'"He said that he was tired" ✅ — Reported speech: backshift tenses (is → was). "Said that" (not "told that" without object).' },
+    { q:'What is the meaning of "come across"?', opts:["Attraversare","Imbattersi in/Trovare per caso","Arrivare","Superare"], ans:1, explain:'"Come across" = imbattersi in, trovare per caso ✅. Es: "I came across an old photo" = Mi sono imbattuto in una vecchia foto.' },
+  ],
+  'B1': [
+    { q:'"Had I known, I ___ differently." Complete:', opts:["acted","would act","would have acted","will act"], ans:2, explain:'"Would have acted" ✅ — Third Conditional: past unreal → Had + past participle, would + have + past participle. Inverted form (no "if").' },
+    { q:'Choose the correct sentence with "unless":', opts:["Unless you don\'t hurry, you\'ll be late.","Unless you hurry, you\'ll be late.","Unless you will hurry, you\'ll be late.","Unless you hurried, you\'ll be late."], ans:1, explain:'"Unless you hurry" ✅ — "Unless" = "if not". NEVER use "don\'t" after unless (it\'s already negative).' },
+    { q:'Which sentence uses a relative clause correctly?', opts:["The man which I met was kind.","The man who I met was kind.","The man whom he met was kind him.","The man that was kind I met."], ans:1, explain:'"The man who I met" ✅ — for people: who/whom/that. For things: which/that. "Which" for people is wrong.' },
+    { q:'"The report needs ___." Complete naturally:', opts:["to proofread","proofreading","be proofread","to be proofreaded"], ans:1, explain:'"Needs proofreading" ✅ — "Need + -ing" = passive meaning. "The car needs washing" = The car needs to be washed.' },
+    { q:'What does "run out of" mean?', opts:["Scappare","Esaurire/Finire le scorte di","Correre fuori","Fallire"], ans:1, explain:'"Run out of" = esaurire, rimanere senza ✅. Es: "We\'ve run out of milk" = Siamo rimasti senza latte.' },
+    { q:'Choose the most appropriate formal way to disagree:', opts:["You\'re wrong.","That\'s rubbish.","I\'m afraid I don\'t entirely agree with that point.","No, no, no."], ans:2, explain:'"I\'m afraid I don\'t entirely agree" ✅ — Formal polite disagreement. In professional/formal English, hedging language shows sophistication.' },
+  ],
+};
+
+let examState = { questions:[], idx:0, correct:0, answers:[] };
+
+function openFinalExam() {
+  if(!CP) return;
+  const lvlIdx = getLevel(CP.xp);
+  const cur = LEVELS[lvlIdx];
+  const next = LEVELS[lvlIdx + 1];
+  if(!next) { showNotif('Hai già raggiunto il livello massimo! 🏆'); return; }
+
+  const examKey = cur.name;
+  const qs = FINAL_EXAMS[examKey] || FINAL_EXAMS['A2'];
+  examState = { questions: qs, idx: 0, correct: 0, answers: [], curLevel: cur, nextLevel: next };
+
+  document.getElementById('exam-modal').classList.add('open');
+  renderExamIntro();
+}
+
+function renderExamIntro() {
+  const { curLevel, nextLevel, questions } = examState;
+  document.getElementById('exam-inner').innerHTML = `
+    <div style="text-align:center;padding:8px 0 16px;">
+      <div style="font-size:2.5rem;margin-bottom:8px;">🎓</div>
+      <div class="modal-title">Esame finale — ${curLevel.name}</div>
+      <div class="modal-sub">${questions.length} domande · Devi rispondere correttamente almeno al 70% per avanzare a <strong>${nextLevel.name}</strong></div>
+      <div style="display:flex;justify-content:center;gap:24px;margin:20px 0;flex-wrap:wrap;">
+        <div style="text-align:center"><div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--green)">${questions.length}</div><div style="font-size:0.72rem;color:var(--ink3)">Domande</div></div>
+        <div style="text-align:center"><div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--gold)">70%</div><div style="font-size:0.72rem;color:var(--ink3)">Per passare</div></div>
+        <div style="text-align:center"><div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--blue)">${nextLevel.name}</div><div style="font-size:0.72rem;color:var(--ink3)">Prossimo livello</div></div>
+      </div>
+      <div style="background:var(--red-bg);border-radius:var(--radius-sm);padding:10px 14px;font-size:0.8rem;margin-bottom:20px;color:var(--red);">
+        ⚠️ Gli errori in questo esame costano XP in base alla gravità (da -8 a -14). Studia bene prima di procedere!
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;">
+        <button class="btn btn-dark" onclick="startExam()">Inizia l'esame →</button>
+        <button class="btn btn-outline" onclick="closeExam()">Annulla</button>
+      </div>
+    </div>
+  `;
+}
+
+function startExam() { renderExamQ(); }
+
+function renderExamQ() {
+  const { questions, idx } = examState;
+  if(idx >= questions.length) { renderExamResult(); return; }
+  const q = questions[idx];
+  const pct = (idx / questions.length) * 100;
+  document.getElementById('exam-inner').innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <span class="modal-title" style="font-size:1rem;">Esame finale</span>
+      <div style="flex:1;"></div>
+      <span style="font-family:'Syne',sans-serif;font-size:0.72rem;font-weight:800;color:var(--gold)">${idx+1}/${questions.length}</span>
+    </div>
+    <div style="height:5px;background:var(--surface2);border-radius:99px;overflow:hidden;margin-bottom:20px;">
+      <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:99px;transition:width 0.4s;"></div>
+    </div>
+    <div class="exam-q">${q.q}</div>
+    <div class="exam-opts" id="exam-opts"></div>
+    <div class="feedback" id="exam-fb"></div>
+  `;
+  const opts = document.getElementById('exam-opts');
+  q.opts.forEach((o, i) => {
+    const b = document.createElement('button');
+    b.className = 'exam-opt';
+    b.textContent = o;
+    b.onclick = () => {
+      opts.querySelectorAll('.exam-opt').forEach(x => x.disabled = true);
+      const correct = i === q.ans;
+      b.classList.add(correct ? 'correct' : 'wrong');
+      if(!correct) opts.querySelectorAll('.exam-opt')[q.ans].classList.add('correct');
+      examState.answers.push(correct);
+      if(correct) examState.correct++;
+      const fb = document.getElementById('exam-fb');
+      fb.className = 'feedback show ' + (correct ? 'ok' : 'no');
+      fb.innerHTML = (correct ? '✅ ' : '❌ ') + q.explain;
+      // Esame finale: penalità più pesante (gravity 1.0 = massimo)
+      if(!correct) {
+        const examPenalty = calcPenalty('grammar', curLevel.name.startsWith('B') ? 'B1' : 'A2+', 1.0);
+        CP.xp = Math.max(0, CP.xp + examPenalty);
+        CP.exDone++;
+        window._wrongStreak = (window._wrongStreak || 0) + 1;
+        saveProfile(CP.username, CP);
+        updateHUD();
+        showNotif(`${examPenalty} XP ❌ Errore nell'esame!`);
+        const xpBar = document.querySelector('.xp-bar-wrap');
+        if(xpBar) { xpBar.classList.add('penalty-flash'); setTimeout(() => xpBar.classList.remove('penalty-flash'), 700); }
+      }
+      setTimeout(() => {
+        examState.idx++;
+        renderExamQ();
+      }, correct ? 1600 : 2400);
+    };
+    opts.appendChild(b);
+  });
+}
+
+function renderExamResult() {
+  const { correct, questions, curLevel, nextLevel } = examState;
+  const total = questions.length;
+  const pct = correct / total;
+  const passed = pct >= 0.7;
+  const scorePct = Math.round(pct * 100);
+
+  if(passed) {
+    // Advance to next level
+    CP.xp = nextLevel.xp;
+    CP.levelsPassed = (CP.levelsPassed || 0) + 1;
+    saveProfile(CP.username, CP);
+    updateHUD();
+    document.getElementById('exam-ready-card').classList.remove('visible');
+  }
+
+  document.getElementById('exam-inner').innerHTML = `
+    <div style="text-align:center;padding:8px 0;">
+      <div style="font-size:3rem;margin-bottom:8px;">${passed ? '🏆' : '📚'}</div>
+      <div class="modal-title">${passed ? 'Esame superato!' : 'Non ancora...'}</div>
+      <div class="modal-sub">${passed ? `Benvenuto al livello <strong>${nextLevel.name}</strong>!` : `Ci vuole almeno il 70%. Hai ottenuto il ${scorePct}%. Studia ancora e riprova!`}</div>
+      <div style="font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;color:${passed?'var(--green)':'var(--red)'};line-height:1;margin:16px 0;">${correct}/${total}</div>
+      <div style="height:10px;background:var(--surface2);border-radius:99px;overflow:hidden;margin:12px 0;">
+        <div style="height:100%;width:${scorePct}%;background:${passed?'var(--green-light)':'var(--red)'};border-radius:99px;transition:width 0.8s;"></div>
+      </div>
+      <div style="font-size:0.78rem;color:var(--ink3);margin-bottom:20px;">${scorePct}% — Soglia di passaggio: 70%</div>
+      ${passed ? `<div style="background:var(--green-bg);border-radius:var(--radius-sm);padding:12px 16px;font-size:0.85rem;margin-bottom:16px;color:var(--green);">🎉 Hai avanzato da <strong>${curLevel.name}</strong> a <strong>${nextLevel.name}</strong>! Il tuo percorso si adatta automaticamente.</div>` : ''}
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-dark" onclick="closeExam()">Torna alla dashboard</button>
+        ${!passed ? `<button class="btn btn-gold" onclick="closeExam();showPanel('exercises',null)">Ripassa gli esercizi</button>` : ''}
+      </div>
+    </div>
+  `;
+
+  if(passed) {
+    setTimeout(() => {
+      closeExam();
+      showLevelUp(nextLevel.name, curLevel.name);
+    }, 3000);
+  }
+}
+
+function closeExam() {
+  document.getElementById('exam-modal').classList.remove('open');
+}
+
+function showLevelUp(newLevel, oldLevel) {
+  document.getElementById('lu-text').textContent = `Livello ${newLevel} sbloccato!`;
+  document.getElementById('lu-sub').textContent = `Hai superato l'esame di ${oldLevel}. Continua così!`;
+  document.getElementById('levelup-banner').classList.add('show');
+}
+
+function closeLevelUp() {
+  document.getElementById('levelup-banner').classList.remove('show');
+}
+
+// ============================================================
+// EXPOSE ALL FUNCTIONS TO GLOBAL SCOPE
+// (required because type="module" creates a closed scope)
+// ============================================================
+Object.assign(window, {
+  switchAuthTab, doLogin, doRegister, doLogout,
+  toggleTheme, showPanel,
+  filterVocab, speak,
+  buildQuickExercise,
+  toggleLesson, goExercise,
+  filterExCat, prevEx, nextEx, checkFillEx,
+  loadDialogue: loadFlashcard => {}, // placeholder
+  nextDial, prevDial, readDial,
+  buildProgress,
+  openFinalExam, closeExam, startExam,
+  closeLevelUp,
+  showPretest, skipPretest, goToRegisterFromPretest,
+  renderPretestQ, renderPretestIntro,
+  manualSave,
+});
+</script>
+
+
+</body></html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0061)file:///C:/Users/User/Downloads/english_journey_firebase.html -->
+<!-- saved from url=(0063)file:///C:/Users/User/Downloads/english_journey_firebase_1.html -->
 <html lang="it"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1104,14 +1104,13 @@ body {
   <button class="mob-nav-item" data-panel="progress" onclick="showPanel(&#39;progress&#39;,this)"><span class="mn-icon">📈</span>Progressi</button>
 </nav>
 
-<script type="module">
+<script src="./index_files/firebase-app-compat.js.download"></script>
+<script src="./index_files/firebase-database-compat.js.download"></script>
+<script>
 // ============================================================
-// FIREBASE REALTIME DATABASE — gratuito senza carta di credito
+// FIREBASE REALTIME DATABASE — compat SDK
 // ============================================================
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
-
-const firebaseConfig = {
+firebase.initializeApp({
   apiKey: "AIzaSyCX-C9clujSiaxXmn8hi6rMBDSv667Cth0",
   authDomain: "englishe-journey.firebaseapp.com",
   projectId: "englishe-journey",
@@ -1119,15 +1118,12 @@ const firebaseConfig = {
   messagingSenderId: "831329159217",
   appId: "1:831329159217:web:f866f7f516cd1fea7aed10",
   databaseURL: "https://englishe-journey-default-rtdb.europe-west1.firebasedatabase.app"
-};
+});
+const _db = firebase.database();
 
-const _fbApp = initializeApp(firebaseConfig);
-const _db    = getDatabase(_fbApp);
-
-// ---------- helpers ----------
 async function loadUsers() {
   try {
-    const snap = await get(ref(_db, 'ej_users'));
+    const snap = await _db.ref('ej_users').get();
     return snap.exists() ? snap.val() : {};
   } catch(e) {
     try { return JSON.parse(localStorage.getItem('ej_users_v2') || '{}'); } catch(_){ return {}; }
@@ -1135,16 +1131,13 @@ async function loadUsers() {
 }
 
 async function saveUsers(users) {
-  try {
-    await set(ref(_db, 'ej_users'), users);
-  } catch(e) {
-    try { localStorage.setItem('ej_users_v2', JSON.stringify(users)); } catch(_){}
-  }
+  try { await _db.ref('ej_users').set(users); }
+  catch(e) { try { localStorage.setItem('ej_users_v2', JSON.stringify(users)); } catch(_){} }
 }
 
 async function loadProfile(username) {
   try {
-    const snap = await get(ref(_db, 'ej_profiles/' + username));
+    const snap = await _db.ref('ej_profiles/' + username).get();
     return snap.exists() ? snap.val() : null;
   } catch(e) {
     try { return JSON.parse(localStorage.getItem('ej_prof_' + username)); } catch(_){ return null; }
@@ -1152,11 +1145,8 @@ async function loadProfile(username) {
 }
 
 async function saveProfile(username, data) {
-  try {
-    await set(ref(_db, 'ej_profiles/' + username), data);
-  } catch(e) {
-    try { localStorage.setItem('ej_prof_' + username, JSON.stringify(data)); } catch(_){}
-  }
+  try { await _db.ref('ej_profiles/' + username).set(data); }
+  catch(e) { try { localStorage.setItem('ej_prof_' + username, JSON.stringify(data)); } catch(_){} }
   try { localStorage.setItem('ej_prof_' + username, JSON.stringify(data)); } catch(_){}
 }
 
@@ -2771,27 +2761,6 @@ function showLevelUp(newLevel, oldLevel) {
 function closeLevelUp() {
   document.getElementById('levelup-banner').classList.remove('show');
 }
-
-// ============================================================
-// EXPOSE ALL FUNCTIONS TO GLOBAL SCOPE
-// (required because type="module" creates a closed scope)
-// ============================================================
-Object.assign(window, {
-  switchAuthTab, doLogin, doRegister, doLogout,
-  toggleTheme, showPanel,
-  filterVocab, speak,
-  buildQuickExercise,
-  toggleLesson, goExercise,
-  filterExCat, prevEx, nextEx, checkFillEx,
-  loadDialogue: loadFlashcard => {}, // placeholder
-  nextDial, prevDial, readDial,
-  buildProgress,
-  openFinalExam, closeExam, startExam,
-  closeLevelUp,
-  showPretest, skipPretest, goToRegisterFromPretest,
-  renderPretestQ, renderPretestIntro,
-  manualSave,
-});
 </script>
 
 
